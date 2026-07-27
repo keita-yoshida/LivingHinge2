@@ -179,29 +179,6 @@ input[type=range]:focus-visible{outline:2px solid var(--cyan);outline-offset:2px
 .viewport{flex:1;position:relative;min-height:0;touch-action:none;cursor:grab}
 .viewport.dragging{cursor:grabbing}
 .viewport svg{width:100%;height:100%;display:block}
-#pv3d{position:absolute;inset:0;width:100%;height:100%;display:none}
-.viewport.mode3d #pv3d{display:block}
-.viewport.mode3d svg{display:none}
-.bendbar{
-  position:absolute;left:50%;bottom:16px;transform:translateX(-50%);
-  display:none;align-items:center;gap:18px;flex-wrap:wrap;justify-content:center;
-  background:rgba(13,15,18,.88);border:1px solid var(--line);border-radius:12px;
-  padding:10px 18px;backdrop-filter:blur(6px);max-width:calc(100% - 24px);z-index:5;
-}
-.viewport.mode3d .bendbar{display:flex}
-.bend-ctl{display:flex;align-items:center;gap:9px}
-.bend-ctl label{font-size:11.5px;color:var(--muted);white-space:nowrap}
-.bend-ctl input[type=range]{width:130px}
-.bend-val{font-size:11px;color:var(--muted);font-family:var(--font-num);white-space:nowrap;min-width:44px}
-.bend-val b{font-size:14px;color:var(--text)}
-.bend-info{font-size:11.5px;color:var(--muted);white-space:nowrap}
-.bend-info b{font-family:var(--font-num);font-size:14px;color:var(--accent)}
-.bend-note{margin-left:8px;font-size:10px;opacity:.75}
-.bend-shape{width:168px;flex:none}
-@media (max-width:700px){
-  .bendbar{gap:8px;padding:8px 12px;bottom:10px}
-  .bend-ctl input[type=range]{width:90px}
-}
 
 /* stats */
 .stats{
@@ -305,7 +282,7 @@ details.help .body ul{padding-left:16px;margin:4px 0}
       </div>
       <div class="ctl">
         <div class="ctl-head">
-          <label for="matThickRng">板厚<span class="hint">3Dプレビューと連動</span></label>
+          <label for="matThickRng">板厚<span class="hint">曲げ半径の目安に反映</span></label>
           <span class="valbox"><input type="number" id="matThickNum" min="1" max="10" step="0.5" value="3"><span class="unit">mm</span></span>
         </div>
         <input type="range" id="matThickRng" min="1" max="10" step="0.5" value="3" aria-label="板厚">
@@ -352,7 +329,7 @@ details.help .body ul{padding-left:16px;margin:4px 0}
         <ul>
           <li><b>ブリッジ幅</b>（つなぎの太さ）は材料厚の1〜1.5倍以上が目安。細いほどよく曲がりますが割れやすくなります。</li>
           <li><b>カット長</b>を長く、<b>列の間隔</b>を狭くするほど、小さな半径まで曲げられます。</li>
-          <li><b>メアンダー</b>はkoFAKTORlab（Dujam Ivanišević氏）考案の相互連結スパイラルパターン。渦同士が絡み合い、固定点を細長いアームで結ぶ構造のため、他と異なり縦横どちらにも曲がり、ドーム状・鞍状などの二重曲率も作れます。3D曲げの「ドーム」「サドル」でイメージを確認できます。</li>
+          <li><b>メアンダー</b>はkoFAKTORlab（Dujam Ivanišević氏）考案の相互連結スパイラルパターン。渦同士が絡み合い、固定点を細長いアームで結ぶ構造のため、他と異なり縦横どちらにも曲がり、ドーム状・鞍状などの二重曲率も作れます。</li>
           <li><b>ドッグボーン</b>はレンズ状スリットの両端を丸いループで終端し、応力集中を避けたパターン（fequalsf.com のテストフォブ #6/#7 を再現）。<b>スリット六角</b>は同 #8 の再現で、内側の六角形の芯が抜け落ちてリング状になります。<b>入れ子三角</b>は同 #9 の再現で、同心三角形の切れ目が角と辺中央で交互になり、何も脱落せずしなやかに曲がります。</li>
           <li>MDF・シナベニヤ（2.5〜4mm）が最も扱いやすい素材です。アクリルは加熱曲げと併用してください。</li>
           <li>本番の前に、小さなテストピースで曲がり具合と強度を必ず確認しましょう。ダウンロード欄の<b>「テストピース」</b>で、パラメータを5段階に振った小片をまとめて出力できます。左端の切り込みの本数が番号です。</li>
@@ -366,10 +343,9 @@ details.help .body ul{padding-left:16px;margin:4px 0}
   <!-- ============ PREVIEW STAGE ============ -->
   <section class="stage">
     <div class="stagebar">
-      <div class="seg" id="segView" style="width:266px" role="radiogroup" aria-label="プレビュー表示">
+      <div class="seg" id="segView" style="width:190px" role="radiogroup" aria-label="プレビュー表示">
         <button data-view="wood" class="on">板プレビュー</button>
         <button data-view="laser">レーザー表示</button>
-        <button data-view="3d">3D曲げ</button>
       </div>
       <div class="zoombox">
         <button id="zoomOut" aria-label="縮小">−</button>
@@ -377,29 +353,10 @@ details.help .body ul{padding-left:16px;margin:4px 0}
         <button id="zoomIn" aria-label="拡大">＋</button>
       </div>
       <button class="btn small" id="btnFit">全体表示</button>
-      <span style="font-size:11px;color:var(--muted);margin-left:auto">ドラッグで移動・回転 / ホイールでズーム / ダブルクリックでリセット</span>
+      <span style="font-size:11px;color:var(--muted);margin-left:auto">ドラッグで移動 / ホイールでズーム / ダブルクリックで全体表示</span>
     </div>
 
     <div class="viewport" id="viewport">
-      <canvas id="pv3d" aria-label="3D曲げプレビュー"></canvas>
-      <div class="bendbar" id="bendbar">
-        <div class="seg bend-shape" id="segShape" role="radiogroup" aria-label="曲げ形状">
-          <button data-shape="cyl" class="on">円筒</button>
-          <button data-shape="dome">ドーム</button>
-          <button data-shape="saddle">サドル</button>
-        </div>
-        <div class="bend-ctl">
-          <label for="bendAngle">曲げ角度</label>
-          <input type="range" id="bendAngle" min="0" max="270" step="1" value="90">
-          <span class="bend-val"><b id="bendAngleVal">90</b>°</span>
-        </div>
-        <div class="bend-ctl">
-          <label for="bendThick">板厚</label>
-          <input type="range" id="bendThick" min="1" max="10" step="0.5" value="3">
-          <span class="bend-val"><b id="bendThickVal">3</b>mm</span>
-        </div>
-        <div class="bend-info">曲げ半径 ≈ <b id="bendR">-</b> mm<span class="bend-note">※形状イメージです</span></div>
-      </div>
       <svg id="pv" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <linearGradient id="wood" x1="0" y1="0" x2="0" y2="1">
@@ -464,7 +421,7 @@ const state = {
   dir:"v",            // v=縦カット(左右に曲がる) h=横カット
   margin:0,
   view:"wood",
-  mat:{kind:"mdf",thick:3},   // material profile (thick is shared with 3D preview)
+  mat:{kind:"mdf",thick:3},   // material profile (thick drives the bend-radius estimate)
   p:{                 // pattern params (all patterns share the pool)
     pitch:6, cut:20, gap:2,
     dw:2,             // diamond width
@@ -950,230 +907,8 @@ function renderPreview(){
   setViewBox();
 }
 
-/* =====================================================================
-   3D bend preview (dependency-free canvas renderer)
-   ===================================================================== */
-const cv3=document.getElementById("pv3d");
-const ctx3=cv3.getContext("2d");
-const s3={yaw:-0.55,pitch:0.40,dist:0,fitDist:0,angle:90,thick:3,shape:"cyl"};
-let prims=[];   // {q:[p0..p3], n:[nx,ny,nz], kind} | {l:[pts...], depthBias}
-const is3d=()=>state.view==="3d";
-
-function bendGeom(){
-  const isV=state.dir==="v";
-  return {isV, len:isV?state.W:state.H, cross:isV?state.H:state.W};
-}
-function build3d(){
-  const t=s3.thick;
-  const {isV,len,cross}=bendGeom();
-  const th=s3.angle*Math.PI/180;
-  const flat=s3.angle<0.5;
-  const R=flat?1e9:len/th;
-  const shape=s3.shape;
-  // base surface in bend-plane coords (A: along bend, B: across, D: depth)
-  const surf=(u,w)=>{
-    const uc=u-len/2, wc=w-cross/2;
-    if(flat)return [uc,-wc,0];
-    if(shape==="dome"){
-      const rho=Math.hypot(uc,wc);
-      if(rho<1e-6)return [0,0,0];
-      const ph=Math.min(rho/R,Math.PI*0.98);
-      const rr=R*Math.sin(ph);
-      return [rr*uc/rho, -rr*wc/rho, -R*(1-Math.cos(ph))];
-    }
-    if(shape==="saddle"){
-      const k=1/R;
-      return [uc,-wc,k*(uc*uc-wc*wc)/2*0.9];
-    }
-    const p=uc/R;
-    return [R*Math.sin(p), -wc, R*(1-Math.cos(p))];
-  };
-  const asm=v=>isV?[v[0],v[1],v[2]]:[-v[1],-v[0],v[2]];
-  // map board coords -> world; off moves toward the concave (back) side
-  const map=(x,y,off)=>{
-    const u=isV?x:y, w=isV?y:x;
-    const P=surf(u,w);
-    if(!off)return asm(P);
-    const e=0.5;
-    const Pu=surf(u+e,w), Pw=surf(u,w+e);
-    const du=[(Pu[0]-P[0])/e,(Pu[1]-P[1])/e,(Pu[2]-P[2])/e];
-    const dw=[(Pw[0]-P[0])/e,(Pw[1]-P[1])/e,(Pw[2]-P[2])/e];
-    let nx=dw[1]*du[2]-dw[2]*du[1], ny=dw[2]*du[0]-dw[0]*du[2], nz=dw[0]*du[1]-dw[1]*du[0];
-    const m=Math.hypot(nx,ny,nz)||1;
-    return asm([P[0]+off*nx/m, P[1]+off*ny/m, P[2]+off*nz/m]);
-  };
-  const bc=(u,w)=>isV?[u,w]:[w,u];
-  prims=[];
-  const quad=(pts,kind)=>{
-    const [p0,p1,,p3]=pts;
-    const ux=p1[0]-p0[0],uy=p1[1]-p0[1],uz=p1[2]-p0[2];
-    const vx=p3[0]-p0[0],vy=p3[1]-p0[1],vz=p3[2]-p0[2];
-    let nx=uy*vz-uz*vy, ny=uz*vx-ux*vz, nz=ux*vy-uy*vx;
-    const m=Math.hypot(nx,ny,nz)||1;
-    prims.push({q:pts,n:[nx/m,ny/m,nz/m],kind});
-  };
-  const single=shape==="cyl";
-  const nU=flat?1:Math.min(64,Math.max(single?16:24,Math.round(s3.angle/3)));
-  const nW=(flat||single)?1:Math.min(32,Math.max(10,Math.round(cross/(len/nU))));
-  const stepU=len/nU, stepW=cross/nW;
-  for(let i=0;i<nU;i++){
-    const u0=stepU*i, u1=stepU*(i+1);
-    for(let j=0;j<nW;j++){
-      const w0=stepW*j, w1=stepW*(j+1);
-      quad([map(...bc(u0,w0),0),map(...bc(u1,w0),0),map(...bc(u1,w1),0),map(...bc(u0,w1),0)],"top");
-      quad([map(...bc(u0,w0),t),map(...bc(u1,w0),t),map(...bc(u1,w1),t),map(...bc(u0,w1),t)],"bot");
-    }
-    quad([map(...bc(u0,0),0),map(...bc(u1,0),0),map(...bc(u1,0),t),map(...bc(u0,0),t)],"edge");
-    quad([map(...bc(u0,cross),0),map(...bc(u1,cross),0),map(...bc(u1,cross),t),map(...bc(u0,cross),t)],"edge");
-  }
-  for(let j=0;j<nW;j++){
-    const w0=stepW*j, w1=stepW*(j+1);
-    for(const u of [0,len]){
-      quad([map(...bc(u,w0),0),map(...bc(u,w1),0),map(...bc(u,w1),t),map(...bc(u,w0),t)],"edge");
-    }
-  }
-  // cut lines on outer surface, lifted slightly to avoid z-fighting
-  const du=stepU*0.9, dw=nW>1?stepW*0.9:1e9;
-  for(const poly of cuts){
-    const pts=[];
-    for(let i=0;i<poly.length;i++){
-      const [x,y]=poly[i];
-      if(i>0){
-        const [px,py]=poly[i-1];
-        const eu=Math.abs((isV?x:y)-(isV?px:py));
-        const ew=Math.abs((isV?y:x)-(isV?py:px));
-        const steps=Math.max(Math.floor(eu/du),Math.floor(ew/dw));
-        for(let s=1;s<=steps;s++){
-          const tt=s/(steps+1);
-          pts.push(map(px+(x-px)*tt, py+(y-py)*tt, -0.25));
-        }
-      }
-      pts.push(map(x,y,-0.25));
-    }
-    prims.push({l:pts});
-  }
-  // recenter depth (Z)
-  let zmin=1e9,zmax=-1e9;
-  for(const pr of prims){
-    for(const p of (pr.q||pr.l)){if(p[2]<zmin)zmin=p[2];if(p[2]>zmax)zmax=p[2];}
-  }
-  const zsh=(zmin+zmax)/2;
-  for(const pr of prims){for(const p of (pr.q||pr.l))p[2]-=zsh;}
-  if(!s3.fitDist)fit3d();
-  document.getElementById("bendR").textContent=flat?"∞":Math.round(R);
-}
-function fit3d(){
-  const {len,cross}=bendGeom();
-  s3.fitDist=Math.max(len,cross)*1.55+40;
-  s3.dist=s3.fitDist;
-}
-function resize3d(){
-  const dpr=Math.min(2,window.devicePixelRatio||1);
-  const w=viewport.clientWidth,h=viewport.clientHeight;
-  if(cv3.width!==w*dpr||cv3.height!==h*dpr){
-    cv3.width=w*dpr;cv3.height=h*dpr;
-  }
-}
-const shadeCol={
-  top:[214,168,108], bot:[152,112,64], edge:[118,86,46]
-};
-function render3d(){
-  resize3d();
-  const W=cv3.width,H=cv3.height;
-  ctx3.setTransform(1,0,0,1,0,0);
-  ctx3.clearRect(0,0,W,H);
-  const cy=Math.cos(s3.yaw),sy=Math.sin(s3.yaw);
-  const cp=Math.cos(s3.pitch),sp=Math.sin(s3.pitch);
-  const f0=H*1.15, dist=s3.dist;
-  const rot=p=>{
-    const x1=p[0]*cy+p[2]*sy, z1=-p[0]*sy+p[2]*cy;
-    const y1=p[1]*cp-z1*sp,  z2=p[1]*sp+z1*cp;
-    return [x1,y1,z2+dist];
-  };
-  const proj=v=>{const f=f0/Math.max(8,v[2]);return [W/2+v[0]*f, H/2-v[1]*f, v[2], f];};
-  // soft ground shadow
-  const g=ctx3.createRadialGradient(W/2,H*0.80,0,W/2,H*0.80,W*0.24);
-  g.addColorStop(0,"rgba(0,0,0,0.34)");g.addColorStop(1,"rgba(0,0,0,0)");
-  ctx3.fillStyle=g;
-  ctx3.save();ctx3.translate(W/2,H*0.80);ctx3.scale(1,0.28);ctx3.translate(-W/2,-H*0.80);
-  ctx3.fillRect(0,H*0.80-W*0.24,W,W*0.48);ctx3.restore();
-  // light in view space
-  const L=[-0.33,0.62,-0.71];
-  const list=[];
-  for(const pr of prims){
-    if(pr.q){
-      const vs=pr.q.map(rot);
-      if(vs.every(v=>v[2]<10))continue;
-      const ps=vs.map(proj);
-      const depth=(vs[0][2]+vs[1][2]+vs[2][2]+vs[3][2])/4;
-      const n=pr.n;
-      const nx=n[0]*cy+n[2]*sy, nz1=-n[0]*sy+n[2]*cy;
-      const ny=n[1]*cp-nz1*sp, nz=n[1]*sp+nz1*cp;
-      const d=Math.abs(nx*L[0]+ny*L[1]+nz*L[2]);
-      const sh=0.52+0.55*d;
-      const c=shadeCol[pr.kind];
-      list.push({depth,ps,col:`rgb(${Math.min(255,c[0]*sh)|0},${Math.min(255,c[1]*sh)|0},${Math.min(255,c[2]*sh)|0})`});
-    }else{
-      const vs=pr.l.map(rot);
-      if(vs.every(v=>v[2]<10))continue;
-      const ps=vs.map(proj);
-      let depth=0;for(const v of vs)depth+=v[2];
-      depth=depth/vs.length-0.8;
-      list.push({depth,line:ps});
-    }
-  }
-  list.sort((a,b)=>b.depth-a.depth);
-  for(const it of list){
-    if(it.line){
-      ctx3.strokeStyle="#33220e";
-      ctx3.lineWidth=Math.min(3,Math.max(0.7,0.4*it.line[0][3]));
-      ctx3.lineCap="round";ctx3.lineJoin="round";
-      ctx3.beginPath();
-      it.line.forEach((p,i)=>i?ctx3.lineTo(p[0],p[1]):ctx3.moveTo(p[0],p[1]));
-      ctx3.stroke();
-    }else{
-      ctx3.fillStyle=it.col;ctx3.strokeStyle=it.col;ctx3.lineWidth=1;
-      ctx3.beginPath();
-      it.ps.forEach((p,i)=>i?ctx3.lineTo(p[0],p[1]):ctx3.moveTo(p[0],p[1]));
-      ctx3.closePath();ctx3.fill();ctx3.stroke();
-    }
-  }
-  document.getElementById("zoomVal").textContent=Math.round(s3.fitDist/s3.dist*100)+"%";
-}
-function zoom3d(factor){
-  const {len,cross}=bendGeom();
-  const nd=s3.dist*factor;
-  const mx=Math.max(len,cross);
-  if(nd<mx*0.35||nd>mx*8)return;
-  s3.dist=nd;render3d();
-}
-/* bend controls */
-document.querySelectorAll("#segShape button").forEach(b=>{
-  b.onclick=()=>{
-    s3.shape=b.dataset.shape;
-    document.querySelectorAll("#segShape button").forEach(x=>x.classList.toggle("on",x===b));
-    build3d();render3d();
-  };
-});
-let rafPending=false;
-function scheduleBuild(){
-  if(rafPending)return;
-  rafPending=true;
-  requestAnimationFrame(()=>{rafPending=false;build3d();render3d();});
-}
-document.getElementById("bendAngle").addEventListener("input",e=>{
-  s3.angle=+e.target.value;
-  document.getElementById("bendAngleVal").textContent=s3.angle;
-  scheduleBuild();
-});
-document.getElementById("bendThick").addEventListener("input",e=>{
-  setThickness(+e.target.value);   // shared with the material profile panel
-});
-
 function renderView(){
-  viewport.classList.toggle("mode3d",is3d());
-  if(is3d()){build3d();render3d();}
-  else renderPreview();
+  renderPreview();
 }
 
 /* zoom & pan */
@@ -1187,7 +922,6 @@ function zoomAt(factor,cx,cy){
 }
 viewport.addEventListener("wheel",e=>{
   e.preventDefault();
-  if(is3d()){zoom3d(Math.pow(1.0015,e.deltaY));return;}
   const r=viewport.getBoundingClientRect();
   const cx=view.x+(e.clientX-r.left)/r.width*view.w;
   const cy=view.y+(e.clientY-r.top)/r.height*view.h;
@@ -1196,15 +930,17 @@ viewport.addEventListener("wheel",e=>{
 let drag=null;
 const touches=new Map();
 let pinchDist=0;
+/* NOTE: viewport は setPointerCapture でポインタを占有するため、
+   viewport 内にインタラクティブ要素を置く場合は必ず除外処理が要る（CLAUDE.md §5）。
+   現在 viewport の中身はプレビュー用 SVG だけなので除外リストは無い。 */
 viewport.addEventListener("pointerdown",e=>{
-  if(e.target.closest(".bendbar"))return;
   touches.set(e.pointerId,{x:e.clientX,y:e.clientY});
   if(touches.size===2){
     const [a,b]=[...touches.values()];
     pinchDist=Math.hypot(b.x-a.x,b.y-a.y);
     drag=null;
   }else{
-    drag={x:e.clientX,y:e.clientY,vx:view.x,vy:view.y,yaw0:s3.yaw,pitch0:s3.pitch};
+    drag={x:e.clientX,y:e.clientY,vx:view.x,vy:view.y};
   }
   viewport.classList.add("dragging");
   viewport.setPointerCapture(e.pointerId);
@@ -1216,23 +952,14 @@ viewport.addEventListener("pointermove",e=>{
     const [a,b]=[...touches.values()];
     const d=Math.hypot(b.x-a.x,b.y-a.y);
     if(pinchDist>0&&d>0){
-      if(is3d()){zoom3d(pinchDist/d);}
-      else{
-        const cx=view.x+((a.x+b.x)/2-r.left)/r.width*view.w;
-        const cy=view.y+((a.y+b.y)/2-r.top)/r.height*view.h;
-        zoomAt(pinchDist/d,cx,cy);
-      }
+      const cx=view.x+((a.x+b.x)/2-r.left)/r.width*view.w;
+      const cy=view.y+((a.y+b.y)/2-r.top)/r.height*view.h;
+      zoomAt(pinchDist/d,cx,cy);
     }
     pinchDist=d;
     return;
   }
   if(!drag)return;
-  if(is3d()){
-    s3.yaw=drag.yaw0+(e.clientX-drag.x)*0.008;
-    s3.pitch=Math.max(-1.45,Math.min(1.45,drag.pitch0+(e.clientY-drag.y)*0.008));
-    render3d();
-    return;
-  }
   view.x=drag.vx-(e.clientX-drag.x)*view.w/r.width;
   view.y=drag.vy-(e.clientY-drag.y)*view.h/r.height;
   setViewBox();
@@ -1244,12 +971,11 @@ const endPointer=e=>{
 };
 viewport.addEventListener("pointerup",endPointer);
 viewport.addEventListener("pointercancel",endPointer);
-function resetCam(){s3.yaw=-0.55;s3.pitch=0.40;fit3d();render3d();}
-viewport.addEventListener("dblclick",()=>is3d()?resetCam():fitView());
-document.getElementById("zoomIn").onclick=()=>is3d()?zoom3d(1/1.25):zoomAt(1/1.25,view.x+view.w/2,view.y+view.h/2);
-document.getElementById("zoomOut").onclick=()=>is3d()?zoom3d(1.25):zoomAt(1.25,view.x+view.w/2,view.y+view.h/2);
-document.getElementById("btnFit").onclick=()=>is3d()?resetCam():fitView();
-window.addEventListener("resize",()=>{fitView();if(is3d())render3d();});
+viewport.addEventListener("dblclick",()=>fitView());
+document.getElementById("zoomIn").onclick=()=>zoomAt(1/1.25,view.x+view.w/2,view.y+view.h/2);
+document.getElementById("zoomOut").onclick=()=>zoomAt(1.25,view.x+view.w/2,view.y+view.h/2);
+document.getElementById("btnFit").onclick=()=>fitView();
+window.addEventListener("resize",()=>fitView());
 
 /* ---------- stats ---------- */
 let totalCutLen=0;
@@ -1333,7 +1059,7 @@ function bindCtl(el,get,set){
     if(isNaN(v))v=+rng.value;
     v=Math.min(+num.max,Math.max(+num.min,v));
     num.value=v;rng.value=v;set(v);paint();regenerate();
-    if(el.dataset.key==="W"||el.dataset.key==="H"){fitView();if(is3d()){fit3d();render3d();}}
+    if(el.dataset.key==="W"||el.dataset.key==="H")fitView();
   });
   el._sync=()=>{const v=get();num.value=v;rng.value=v;paint();};
   el._sync();
@@ -1403,14 +1129,9 @@ const matThickRng=document.getElementById("matThickRng");
 function setThickness(v){
   v=Math.min(10,Math.max(1,Math.round(v*2)/2));
   state.mat.thick=v;
-  s3.thick=v;
   matThickNum.value=v;matThickRng.value=v;
   matThickRng.style.setProperty("--fill",((v-1)/9*100)+"%");
-  const bt=document.getElementById("bendThick");
-  bt.value=v;
-  document.getElementById("bendThickVal").textContent=v;
   updateMinR();renderWarnings();scheduleHash();
-  if(is3d())scheduleBuild();
 }
 matThickRng.addEventListener("input",()=>setThickness(+matThickRng.value));
 matThickNum.addEventListener("change",()=>{

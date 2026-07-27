@@ -1,0 +1,30 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(py --version)",
+      "Read(//c/Users/keita/Downloads/**)",
+      "Bash(echo \"---ENTITY COUNTS---\")",
+      "Bash(echo \"LWPOLYLINE:\")",
+      "Bash(echo \"POLYLINE:\")",
+      "Bash(echo \"ARC:\")",
+      "Bash(awk 'NR%2==1{code=$1+0} NR%2==0{val=$0; if\\(code==0\\) print val} ' /c/Users/keita/Downloads/FZ0B7ZJHWRZ5LBA.dxf)",
+      "Read(//c/Users/keita/AppData/Local/Temp/claude/C--Users-keita-Documents-claude-livinghinge-generator/49f81887-47f4-4da8-aef1-14a8df9f363a/scratchpad/**)",
+      "Bash(sed -i 's#/c/Users/keita/Downloads#C:/Users/keita/Downloads#' parse.py)",
+      "Bash(python parse.py)",
+      "Bash(cat)",
+      "Bash(python inspect1.py)",
+      "Bash(python panels.py)",
+      "Bash(python zoom.py)",
+      "Bash(python zoom2.py)",
+      "Bash(python measure.py)",
+      "Bash(sed -i 's#N=max\\(12,round\\(cut/1.1\\)\\)#N=max\\(22,round\\(cut/0.7\\)\\)#' gen_check.py)",
+      "Bash(sed -i 's#bridge=min\\(L\\\\*0.32,r+sw\\\\*0.5\\)#bridge=max\\(0.35,min\\(L*0.28,0.35+sw*0.2\\)\\)#' gen_check.py)",
+      "Bash(python gen_check.py)",
+      "Bash(python -)",
+      "Bash(python deep6.py)",
+      "Bash(python chain.py)",
+      "Bash(python motif.py)",
+      "Bash(python gen3.py)"
+    ]
+  }
+}

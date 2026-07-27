@@ -432,7 +432,7 @@ const state = {
     rw:1.2,           // hexslit ring width
     br:1.6,           // bone lens half-width
     ts:18, td:1.0,    // tri cell size / ring spacing
-    cs:10, sw:1.4, web:2 // meander cell / arm width (web kept for hash compat)
+    cs:10, sw:1.4     // meander cell / arm width
   }
 };
 
@@ -459,7 +459,6 @@ const PARAM_DEFS = {
   td:   {label:"リング間隔",hint:"狭いほど柔らかい",  min:0.6, max:5,  step:0.1, unit:"mm"},
   cs:   {label:"セルサイズ",hint:"渦1個の大きさ",       min:5,   max:40, step:0.5, unit:"mm"},
   sw:   {label:"アーム幅",  hint:"セルの奇数分割に自動調整",min:0.8, max:5,  step:0.1, unit:"mm"},
-  web:  {label:"セル間隔",  hint:"",                    min:0.8, max:8,  step:0.1, unit:"mm"},
 };
 
 /* ---------- geometry helpers ---------- */
@@ -780,10 +779,14 @@ const PATTERNS=[
   {id:"tri",     name:"入れ子三角",params:["ts","td","gap"]},
   {id:"spiral",  name:"メアンダー",params:["cs","sw"]},
 ];
+/* プリセットは PATTERNS[].params の全キーを網羅すること（tools/smoke.mjs が検査する）。
+   形状固有パラメータは列間隔 pitch に比例させ、モチーフの見た目の比率を3段階で揃える
+   （既存の hr/cs/ts が「しなやか=細かい / しっかり=大きめ」で揃っているのと同じ考え方）。
+   std は state.p の初期値と一致させること（初期状態＝標準プリセット）。 */
 const PRESETS={
-  soft:{pitch:4,  cut:30, gap:1.5, hr:4, hs:1.0, rw:0.9, cs:8,  sw:1.1, br:1.1, ts:14, td:0.8},
-  std: {pitch:6,  cut:20, gap:2,   hr:5, hs:1.4, rw:1.2, cs:10, sw:1.4, br:1.6, ts:18, td:1.0},
-  firm:{pitch:9,  cut:14, gap:3,   hr:7, hs:2.2, rw:1.8, cs:14, sw:2,   br:2.2, ts:24, td:1.5},
+  soft:{pitch:4,  cut:30, gap:1.5, dw:1.3, amp:1.1, wlen:13, cw:2.5, bulge:1.3, hr:4, hs:1.0, rw:0.9, cs:8,  sw:1.1, br:1.1, ts:14, td:0.8},
+  std: {pitch:6,  cut:20, gap:2,   dw:2,   amp:1.6, wlen:18, cw:3.5, bulge:2,   hr:5, hs:1.4, rw:1.2, cs:10, sw:1.4, br:1.6, ts:18, td:1.0},
+  firm:{pitch:9,  cut:14, gap:3,   dw:3,   amp:2.4, wlen:26, cw:5.5, bulge:3,   hr:7, hs:2.2, rw:1.8, cs:14, sw:2,   br:2.2, ts:24, td:1.5},
 };
 
 /* ---------- material profile & bend radius heuristic ---------- */
@@ -1089,7 +1092,7 @@ function syncAll(){
 /* pattern cards with live thumbnails */
 function thumbSVG(id){
   const th={pattern:id,W:66,H:44,frame:false,dir:"v",margin:2,view:"laser",
-    p:{pitch:8,cut:12,gap:2,dw:3,amp:2,wlen:12,cw:4,bulge:2.4,hr:6,hs:1.6,rw:1.3,br:1.6,ts:19,td:1.1,cs:15,sw:2.2,web:2}};
+    p:{pitch:8,cut:12,gap:2,dw:3,amp:2,wlen:12,cw:4,bulge:2.4,hr:6,hs:1.6,rw:1.3,br:1.6,ts:19,td:1.1,cs:15,sw:2.2}};
   const polys=GEN[id](th,2,2,64,42);
   const s=polys.map(p=>p.length===2
     ?`<line x1="${p[0][0].toFixed(2)}" y1="${p[0][1].toFixed(2)}" x2="${p[1][0].toFixed(2)}" y2="${p[1][1].toFixed(2)}"/>`

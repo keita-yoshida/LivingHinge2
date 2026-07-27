@@ -1,7 +1,7 @@
 {
   "tool": "tools/golden.mjs",
   "target": "index.html",
-  "targetSha256": "2f5206530eb1f895583540e0d3a53eb5f1d049f28f1737c9e418c789a5469055",
+  "targetSha256": "f7b842604513b728e73f7f53fc8250387abc30e30cbf8b359b5d2b391fb88322",
   "capturedAt": "2026-07-27",
   "caseCount": 86,
   "cases": {
@@ -121,44 +121,44 @@
     },
     "board__wave__soft__v": {
       "dxf": {
-        "bytes": 64143,
-        "sha256": "7da81d9a13115de8f4589611ae968b9ee60b0725bc0e24e70e7b21cc015bde49"
+        "bytes": 64550,
+        "sha256": "cd1bf3e860d6a711a5e18ad5770597532483b612bc8d816e935819e463828b1e"
       },
       "svg": {
-        "bytes": 25198,
-        "sha256": "f1f6c4d4ec2aeea46a2ff7f507e7816f209baf1f44cf3f1a785a14c79c1a9090"
+        "bytes": 25605,
+        "sha256": "9b8ee0acf41353741376e8eb122e8b2dfec86fa0007cbb3c81f02a677e59131a"
       },
       "polylines": 91,
-      "cutLen": 2520.777,
-      "flexScore": 1.396,
-      "minRadius": 19.342,
+      "cutLen": 2508.249,
+      "flexScore": 1.388,
+      "minRadius": 19.456,
       "params": {
         "pitch": 4,
         "cut": 30,
         "gap": 1.5,
-        "amp": 1.6,
-        "wlen": 18
+        "amp": 1.1,
+        "wlen": 13
       }
     },
     "board__wave__soft__h": {
       "dxf": {
-        "bytes": 61048,
-        "sha256": "fb2adca73259e3e66cc3e71a70f7feeaa2b7cebeb394419b5a0974fdf4191914"
+        "bytes": 61350,
+        "sha256": "fd1f9c83ddfb022198694b856ba589a2afdfa311ca2ca31bd2c5a2d5846643c8"
       },
       "svg": {
-        "bytes": 23881,
-        "sha256": "66019428864b276d10bfdda5691124e4704eda15b7481d113ca4382459001eaf"
+        "bytes": 24181,
+        "sha256": "5fc31102cdfbd91b512fa2b01019c91685641f7908f984d0b2546b73a534a027"
       },
       "polylines": 78,
-      "cutLen": 2467.573,
-      "flexScore": 1.361,
-      "minRadius": 19.835,
+      "cutLen": 2451.204,
+      "flexScore": 1.351,
+      "minRadius": 19.992,
       "params": {
         "pitch": 4,
         "cut": 30,
         "gap": 1.5,
-        "amp": 1.6,
-        "wlen": 18
+        "amp": 1.1,
+        "wlen": 13
       }
     },
     "board__wave__std__v": {
@@ -205,84 +205,84 @@
     },
     "board__wave__firm__v": {
       "dxf": {
-        "bytes": 27295,
-        "sha256": "7a7b6df2043d9e7692ec4d571fdbd8f66cae725bde4f560a6d1450ca5b66e8f7"
+        "bytes": 27367,
+        "sha256": "a54f0ae361116b6cbbfc75f10353af84500406b9a8b4d4cb1d466295bafa83e6"
       },
       "svg": {
-        "bytes": 11526,
-        "sha256": "5f6c9e97be412ea68d08394e37d3d56cee864263eccfe7318c4429aceaf3f174"
+        "bytes": 11598,
+        "sha256": "f0fe6b7ba2a7e71267555a53d51595703936c3e506a9f3c13feaff44162def30"
       },
       "polylines": 66,
-      "cutLen": 1177.461,
-      "flexScore": 0.355,
-      "minRadius": 76.01,
+      "cutLen": 1185.546,
+      "flexScore": 0.359,
+      "minRadius": 75.247,
       "params": {
         "pitch": 9,
         "cut": 14,
         "gap": 3,
-        "amp": 1.6,
-        "wlen": 18
+        "amp": 2.4,
+        "wlen": 26
       }
     },
     "board__wave__firm__h": {
       "dxf": {
-        "bytes": 24912,
-        "sha256": "bf2723db5bc5eda7cff9f7f095d0cfeb4ae5a3074871d652ae6c207747254f74"
+        "bytes": 24983,
+        "sha256": "39bf045f1dc091abf00c9d2cc11d450db51f23aac20f6bee028c25ff8165b351"
       },
       "svg": {
-        "bytes": 10363,
-        "sha256": "50445785d0365101206a4862318f831dd6f76b61c6a4e7ce604834eb51ce75a9"
+        "bytes": 10432,
+        "sha256": "ed5604b6eae562ef4375fc7e2b0842961c920809b589deb2882f5a50ab2b6ddf"
       },
       "polylines": 54,
-      "cutLen": 1122.647,
-      "flexScore": 0.331,
-      "minRadius": 81.62,
+      "cutLen": 1125.641,
+      "flexScore": 0.332,
+      "minRadius": 81.292,
       "params": {
         "pitch": 9,
         "cut": 14,
         "gap": 3,
-        "amp": 1.6,
-        "wlen": 18
+        "amp": 2.4,
+        "wlen": 26
       }
     },
     "board__diamond__soft__v": {
       "dxf": {
-        "bytes": 15328,
-        "sha256": "16023df0921501983b6ccca8941a9c5730de3c021d0e22c178046a3b901da895"
+        "bytes": 15748,
+        "sha256": "271d1a7d0995701787ddf058545f440be5be959ce4d02e3c70b688dff997e37e"
       },
       "svg": {
-        "bytes": 6458,
-        "sha256": "0c5cb959f49888c986b1937cb9808081e7a4c232209801799a5d45e95f881815"
+        "bytes": 6878,
+        "sha256": "21b1226892927a2222984eec1f9ba7e49ad2769e9dbc4c0e196b5fbeffd468b2"
       },
       "polylines": 121,
-      "cutLen": 4408.923,
-      "flexScore": 2.627,
-      "minRadius": 13.84,
+      "cutLen": 4403.773,
+      "flexScore": 2.624,
+      "minRadius": 13.85,
       "params": {
         "pitch": 4,
         "cut": 30,
         "gap": 1.5,
-        "dw": 2
+        "dw": 1.3
       }
     },
     "board__diamond__soft__h": {
       "dxf": {
-        "bytes": 13444,
-        "sha256": "10328745b5e36080eddfb272936900f9fd096d142a627c34dcc821f0a0238476"
+        "bytes": 13904,
+        "sha256": "bc61b12a03076f298147793d4df8824964995ed680c36a8fc4afc108733c2c2b"
       },
       "svg": {
-        "bytes": 5219,
-        "sha256": "a226204aefe31e696fdbbff79f871a287ec937a9fed2cc5b1f3614818595c3ac"
+        "bytes": 5679,
+        "sha256": "acd00cc5919cab6e8bad45c96ec68646b5d79f3ea44fb20ce2dd04bb6d5101e5"
       },
       "polylines": 94,
-      "cutLen": 4291.664,
-      "flexScore": 2.551,
-      "minRadius": 14.061,
+      "cutLen": 4286.663,
+      "flexScore": 2.547,
+      "minRadius": 14.07,
       "params": {
         "pitch": 4,
         "cut": 30,
         "gap": 1.5,
-        "dw": 2
+        "dw": 1.3
       }
     },
     "board__diamond__std__v": {
@@ -327,82 +327,82 @@
     },
     "board__diamond__firm__v": {
       "dxf": {
-        "bytes": 11213,
-        "sha256": "d05d1a5545e66a53a5c76762aceac6f04d87f4bc916dbd827d15bbc5a2338887"
+        "bytes": 11433,
+        "sha256": "05269da2e2cf916b4c48e126faee673a6369f03002d9edc1078485876adc3429"
       },
       "svg": {
-        "bytes": 4207,
-        "sha256": "24c0f42f63bb18f4b01938b41f53486c22a1541443a5ff782f970d2ae111a115"
+        "bytes": 4427,
+        "sha256": "4c8145285c7711cdb6cc798a842d02bfc621112b7cbe7c4089c62a0629148dd7"
       },
       "polylines": 79,
-      "cutLen": 1903.31,
-      "flexScore": 0.679,
-      "minRadius": 39.792,
+      "cutLen": 1922.234,
+      "flexScore": 0.687,
+      "minRadius": 39.303,
       "params": {
         "pitch": 9,
         "cut": 14,
         "gap": 3,
-        "dw": 2
+        "dw": 3
       }
     },
     "board__diamond__firm__h": {
       "dxf": {
-        "bytes": 9882,
-        "sha256": "1946f3026f0994d1e799a7ba1743e923e0e6c7aa2fb0d7972cf076d5b26e286c"
+        "bytes": 10078,
+        "sha256": "eb587dec01a890dc3cf470ef8338fc95d0928cf78bc6eb3404aef34494ca4d8f"
       },
       "svg": {
-        "bytes": 3559,
-        "sha256": "ee58effe08304864ec6e345e1561757b101507e4a5965e474d2de92367350172"
+        "bytes": 3755,
+        "sha256": "0ded9fe263595bc47bd3304180a9ee07dff362d0d14439bc07ac0e3f3ebd7e70"
       },
       "polylines": 64,
-      "cutLen": 1780.071,
-      "flexScore": 0.624,
-      "minRadius": 43.294,
+      "cutLen": 1797.464,
+      "flexScore": 0.631,
+      "minRadius": 42.763,
       "params": {
         "pitch": 9,
         "cut": 14,
         "gap": 3,
-        "dw": 2
+        "dw": 3
       }
     },
     "board__cross__soft__v": {
       "dxf": {
-        "bytes": 6572,
-        "sha256": "6c7930bb1a996dce8663a13c2a1d2f574b153872f1ee7e13575b56b6039755f6"
+        "bytes": 6692,
+        "sha256": "cab3f7ad2ec48e22c83f3ec53fa2b77b0f2224e9dd4362b62cefae1dd147aca3"
       },
       "svg": {
-        "bytes": 6957,
-        "sha256": "6c389f39c623e8d5b2eb34c6b3077178d5218e0ec23dc5057bd0d89bd6afc0d8"
+        "bytes": 7077,
+        "sha256": "5d576311df65a923fdb6381fe3b627885dc53515147328b4b5c0b3a4c3f00f22"
       },
       "polylines": 151,
-      "cutLen": 2582,
-      "flexScore": 1.436,
-      "minRadius": 18.805,
+      "cutLen": 2540,
+      "flexScore": 1.408,
+      "minRadius": 19.17,
       "params": {
         "pitch": 4,
         "cut": 30,
         "gap": 1.5,
-        "cw": 3.5
+        "cw": 2.5
       }
     },
     "board__cross__soft__h": {
       "dxf": {
-        "bytes": 6096,
-        "sha256": "b420f351fac65ecf30acf59563f69d4a6f0e1ac4c7164cb3e1d41d0f04ccb9fb"
+        "bytes": 6216,
+        "sha256": "ba162f7b0ce47c270a4354f7a48b145e011fc1b012a40b8b1ace04f1a7e82998"
       },
       "svg": {
-        "bytes": 6379,
-        "sha256": "44392247d587b7d1f3f3f33e0c27174f6b04dea8f436db5ddb32269ad22c662d"
+        "bytes": 6499,
+        "sha256": "1a852ac62c7d0474e4ade12ebc09eb8f393414e5ee3ee175dd645c71a7f09ec1"
       },
       "polylines": 137,
-      "cutLen": 2523.5,
-      "flexScore": 1.398,
-      "minRadius": 19.318,
+      "cutLen": 2481.5,
+      "flexScore": 1.37,
+      "minRadius": 19.704,
       "params": {
         "pitch": 4,
         "cut": 30,
         "gap": 1.5,
-        "cw": 3.5
+        "cw": 2.5
       }
     },
     "board__cross__std__v": {
@@ -448,81 +448,81 @@
     "board__cross__firm__v": {
       "dxf": {
         "bytes": 5176,
-        "sha256": "9733a412ed16b363556260cca4880e5b3fc349a084b2fcd3926dc05865a0ad39"
+        "sha256": "7cf0d9a72d8947909bc315207fc3c50743ebe04c76149a44280f512f67d53f78"
       },
       "svg": {
         "bytes": 5402,
-        "sha256": "da9db3fe097552b6315c28eec72703e52bb855ed902f27f456ae741cb918788e"
+        "sha256": "69c164834ab1b1e46329859e598ed4c823bbb8af4844696ca3b67a04143731ca"
       },
       "polylines": 118,
-      "cutLen": 1316,
-      "flexScore": 0.417,
-      "minRadius": 64.759,
+      "cutLen": 1420,
+      "flexScore": 0.463,
+      "minRadius": 58.284,
       "params": {
         "pitch": 9,
         "cut": 14,
         "gap": 3,
-        "cw": 3.5
+        "cw": 5.5
       }
     },
     "board__cross__firm__h": {
       "dxf": {
-        "bytes": 4705,
-        "sha256": "ab1cdec1b73a8ddf1d2df0efa89dd6fc2cbd764940324737ba505b0b336ca44c"
+        "bytes": 4712,
+        "sha256": "e7b516afa70f94805d9c3c2cf634acf142dedded0ed954f29b53a8a884eafe2c"
       },
       "svg": {
-        "bytes": 4895,
-        "sha256": "832cc80541648ec40b149a9604752b37720358b640f730d27071d9ea7984c085"
+        "bytes": 4902,
+        "sha256": "b326b622be7effdacdb6e78ae7313c5637b1c324dfff7931e219033341c680ee"
       },
       "polylines": 106,
-      "cutLen": 1244.5,
-      "flexScore": 0.385,
-      "minRadius": 70.115,
+      "cutLen": 1342.5,
+      "flexScore": 0.429,
+      "minRadius": 62.976,
       "params": {
         "pitch": 9,
         "cut": 14,
         "gap": 3,
-        "cw": 3.5
+        "cw": 5.5
       }
     },
     "board__arc__soft__v": {
       "dxf": {
-        "bytes": 40387,
-        "sha256": "c0ee769a9271f6d367e9c9d48372214d2e2603e99204643e6b2c9caf60dd155b"
+        "bytes": 40563,
+        "sha256": "e726daea0976a502b583353dbb6bd338c2722ba1d545b224aa8785519944a4f7"
       },
       "svg": {
-        "bytes": 16877,
-        "sha256": "e099460212b8e45583894c53c52b3c66029e62ed4dd859ebe0e8d5c97572f88d"
+        "bytes": 17053,
+        "sha256": "578968569e4620110cf537ed0244df6ec2fb7d36483ee0a2798198ba7cc7806a"
       },
       "polylines": 91,
-      "cutLen": 2402.134,
-      "flexScore": 1.319,
-      "minRadius": 20.477,
+      "cutLen": 2388.689,
+      "flexScore": 1.31,
+      "minRadius": 20.614,
       "params": {
         "pitch": 4,
         "cut": 30,
         "gap": 1.5,
-        "bulge": 2
+        "bulge": 1.3
       }
     },
     "board__arc__soft__h": {
       "dxf": {
-        "bytes": 38452,
-        "sha256": "bda6d82a414b292247d9987c123a791cc580f0db2895f9e61effc4fc73d32e21"
+        "bytes": 38614,
+        "sha256": "fbef4271a4ab42289de70139c334112b2746d21183a7310a3df689150c890740"
       },
       "svg": {
-        "bytes": 16124,
-        "sha256": "cf148039aa155f17c5448fabf22ddfba460db209ba9a8ac5ac672a0bfe96b872"
+        "bytes": 16278,
+        "sha256": "a75854e6e64334445b93a21f4e6846cee25af2c574f14d3ff317c1df721f0b1b"
       },
       "polylines": 78,
-      "cutLen": 2346.7,
-      "flexScore": 1.282,
-      "minRadius": 21.054,
+      "cutLen": 2333.647,
+      "flexScore": 1.274,
+      "minRadius": 21.195,
       "params": {
         "pitch": 4,
         "cut": 30,
         "gap": 1.5,
-        "bulge": 2
+        "bulge": 1.3
       }
     },
     "board__arc__std__v": {
@@ -567,42 +567,42 @@
     },
     "board__arc__firm__v": {
       "dxf": {
-        "bytes": 28633,
-        "sha256": "56f21315449d9c54d5653d1cfd1752e79ec3d14aad03b6fdb852bc21e5a565ac"
+        "bytes": 28523,
+        "sha256": "4b4e25fec96f152a1268a331d388c93349b5cf21a1494aa1ae52e8eac6c470cf"
       },
       "svg": {
-        "bytes": 10540,
-        "sha256": "ad20e48d80d91f4ebe6ffe8774b358598bf8c5c50ac0f9fe4c303244d1db9972"
+        "bytes": 10430,
+        "sha256": "7b8a6803c6d5647a9f260acab6ee65b810f9baef7cc74680d04f7c72b502d135"
       },
       "polylines": 66,
-      "cutLen": 1163.153,
-      "flexScore": 0.349,
-      "minRadius": 77.398,
+      "cutLen": 1206.861,
+      "flexScore": 0.368,
+      "minRadius": 73.307,
       "params": {
         "pitch": 9,
         "cut": 14,
         "gap": 3,
-        "bulge": 2
+        "bulge": 3
       }
     },
     "board__arc__firm__h": {
       "dxf": {
-        "bytes": 26115,
-        "sha256": "ccaa1e41d4b3724f81cebdf294b4c934364983a742c205bb48f56c1a5d384fda"
+        "bytes": 26017,
+        "sha256": "731092e014dec734bef34c956a8f00f4b57421cb8b75a63333b1f193b11b0578"
       },
       "svg": {
-        "bytes": 9433,
-        "sha256": "21efb455eafee6cd2a48d841f0e025e59e1f5c65a0146a90e8d0c18df9dc09af"
+        "bytes": 9393,
+        "sha256": "77dd7efde466f0fec778b2bdf8ad844cfd225aca006a5ca8c8bdf08f217f72b1"
       },
       "polylines": 54,
-      "cutLen": 1105.527,
-      "flexScore": 0.323,
-      "minRadius": 83.546,
+      "cutLen": 1146.237,
+      "flexScore": 0.341,
+      "minRadius": 79.107,
       "params": {
         "pitch": 9,
         "cut": 14,
         "gap": 3,
-        "bulge": 2
+        "bulge": 3
       }
     },
     "board__hex__soft__v": {

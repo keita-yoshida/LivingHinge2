@@ -58,6 +58,8 @@ async function main() {
   const takeErrors = () => { const e = errors; errors = []; return e; };
 
   await page.goto(URL_BASE, { waitUntil: "load" });
+  // 以降の操作で state が書き換わるため、初期値をここで控えておく
+  await page.evaluate(() => { window.__defaults = JSON.parse(JSON.stringify({ p: state.p, mat: state.mat })); });
   check("初期読み込みでエラーが出ない", takeErrors().length === 0, errors.join(" / "));
 
   /* --- 3D の痕跡が残っていないこと --- */
@@ -136,6 +138,41 @@ async function main() {
   await page.click('[data-preset="firm"]');
   const firmP = await page.evaluate(() => state.p.pitch);
   check("プリセットが反映される", softP === 4 && firmP === 9, `pitch soft=${softP} firm=${firmP}`);
+
+  /* --- プリセットの網羅性（CLAUDE.md §3.4 手順3 / §7.2 の欠陥の再発防止） ---
+     PATTERNS[].params の全キーが3プリセットすべてに存在しないと、
+     そのパターンではプリセットが形状に効かない。 */
+  const presetGaps = await page.evaluate(() => {
+    const need = [...new Set(PATTERNS.flatMap((p) => p.params))];
+    const miss = [];
+    for (const [name, preset] of Object.entries(PRESETS))
+      for (const k of need) if (!(k in preset)) miss.push(`${name}.${k}`);
+    return miss;
+  });
+  check("PRESETS が全パターンの全パラメータを網羅している", presetGaps.length === 0, presetGaps.join(" "));
+
+  /* --- 初期値＝標準プリセット（プリセット追加時にずれやすい） --- */
+  const stdMatchesDefault = await page.evaluate(() => {
+    const diff = [];
+    for (const [k, v] of Object.entries(PRESETS.std)) if (window.__defaults.p[k] !== v) diff.push(`${k}:${window.__defaults.p[k]}≠${v}`);
+    return diff;
+  });
+  check("初期パラメータが標準プリセットと一致する", stdMatchesDefault.length === 0, stdMatchesDefault.join(" "));
+
+  /* --- 全パターン×全プリセットで自動制限の警告が出ないこと ---
+     形状幅が列間隔に近すぎると diamond/cross は自動的に切り詰められる。
+     プリセット値がその領域に入っていたら、プリセットの設計ミス。 */
+  const clampWarns = await page.evaluate(() => {
+    const bad = [];
+    for (const name of ["soft", "std", "firm"])
+      for (const pat of PATTERNS.map((p) => p.id)) {
+        state.pattern = pat; Object.assign(state.p, PRESETS[name]); regenerate();
+        const t = document.getElementById("warns").textContent;
+        if (/自動的に制限/.test(t)) bad.push(`${pat}/${name}`);
+      }
+    return bad;
+  });
+  check("プリセット値で形状の自動制限が発生しない", clampWarns.length === 0, clampWarns.join(" "));
 
   /* --- 目標半径の逆算ソルバー --- */
   await page.evaluate(() => { state.mat.thick = 3; setThickness(3); state.pattern = "straight"; buildParamCtls(); regenerate(); });

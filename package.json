@@ -1,0 +1,16 @@
+{
+  "name": "livinghinge-generator",
+  "version": "8.0.0",
+  "private": true,
+  "type": "module",
+  "description": "レーザー加工用カーフベンディング/リビングヒンジパターン ジェネレーター",
+  "scripts": {
+    "test": "npm run test:golden && npm run test:smoke",
+    "test:golden": "node tools/golden.mjs check",
+    "test:smoke": "node tools/smoke.mjs",
+    "golden:capture": "node tools/golden.mjs capture"
+  },
+  "devDependencies": {
+    "playwright": "1.56.1"
+  }
+}

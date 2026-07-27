@@ -1,0 +1,52 @@
+name: CI
+
+on:
+  push:
+    branches: [main, "claude/**"]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: 依存のインストール
+        run: npm ci
+
+      # Playwright のブラウザはバージョンごとにキャッシュする（ダウンロードが重いため）
+      - name: Playwright のバージョンを取得
+        id: pw
+        run: echo "version=$(node -p "require('playwright/package.json').version")" >> "$GITHUB_OUTPUT"
+
+      - name: ブラウザキャッシュの復元
+        id: pw-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ steps.pw.outputs.version }}
+
+      - name: Chromium のインストール
+        if: steps.pw-cache.outputs.cache-hit != 'true'
+        run: npx playwright install --with-deps chromium
+
+      - name: Chromium の依存だけ導入（キャッシュヒット時）
+        if: steps.pw-cache.outputs.cache-hit == 'true'
+        run: npx playwright install-deps chromium
+
+      # 出力リグレッションの安全網（CLAUDE.md §1-6, §6.0）
+      # 差分が出た場合、出力仕様を意図的に変えたのでなければマージしない。
+      - name: 出力ゴールデン照合
+        run: npm run test:golden
+
+      # 画面まわりの回帰（CLAUDE.md §6.4）。実ポインタ操作で §5 の罠を検証する。
+      - name: UIスモークテスト
+        run: npm run test:smoke

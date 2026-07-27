@@ -17,11 +17,7 @@ import { readFile, writeFile, mkdir, rm, readdir } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { createRequire } from "node:module";
-
-const require = createRequire(import.meta.url);
-// playwright はグローバル導入のみ（このリポジトリは依存ゼロを維持中）
-const { chromium } = require("/opt/node22/lib/node_modules/playwright");
+import { chromium } from "playwright";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const GOLDEN_DIR = path.join(ROOT, "tests", "golden");
@@ -123,7 +119,7 @@ async function run(mode) {
   const cases = buildCases();
   const src = await readFile(path.join(ROOT, TARGET), "utf8");
   const server = await serve(ROOT, PORT);
-  const browser = await chromium.launch({ executablePath: "/opt/pw-browsers/chromium-1194/chrome-linux/chrome" });
+  const browser = await chromium.launch();
   const page = await browser.newPage({ viewport: { width: 1280, height: 800 } });
 
   const pageErrors = [];

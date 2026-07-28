@@ -717,12 +717,16 @@ const GEN = {
         const cy=y0+R*SQ+r*rowStep+yoff;
         const mv=p=>[cx+p[0],cy+p[1]];
         out.push(Vi.concat([Vi[0]]).map(mv));          // inner hexagon: closed cut
-        for(let e=0;e<6;e+=2){                         // outer: 3 two-edge pieces
-          const A=Vo[e], B=Vo[(e+1)%6], C=Vo[(e+2)%6];
-          const eL=Math.hypot(B[0]-A[0],B[1]-A[1]);
-          const t=Math.min(0.45,(gap/2)/eL);
-          out.push([lerpPt(A,B,t),B,lerpPt(B,C,1-t)].map(mv));
-        }
+        // 外郭は左右2本の長いポリライン。切れ目は上辺・下辺の中央だけなので
+        // 左右/上下の鏡対称が保たれ、参照フォブ#8と同じ規則的な織り目になる。
+        // (v9までは角3箇所で切って3ピースに割っていたため、3回対称の
+        //  風車状になり、短い括弧が散らばった見た目だった)
+        const tT=Math.min(0.45,(gap/2)/Math.hypot(Vo[2][0]-Vo[1][0],Vo[2][1]-Vo[1][1]));
+        const tB=Math.min(0.45,(gap/2)/Math.hypot(Vo[5][0]-Vo[4][0],Vo[5][1]-Vo[4][1]));
+        const Mt1=lerpPt(Vo[1],Vo[2],0.5-tT), Mt2=lerpPt(Vo[1],Vo[2],0.5+tT);
+        const Mb1=lerpPt(Vo[4],Vo[5],0.5-tB), Mb2=lerpPt(Vo[4],Vo[5],0.5+tB);
+        out.push([Mt2,Vo[2],Vo[3],Vo[4],Mb1].map(mv));  // 左半分
+        out.push([Mb2,Vo[5],Vo[0],Vo[1],Mt1].map(mv));  // 右半分
       }
     }
     return clipRect(out,x0,y0,x1,y1);

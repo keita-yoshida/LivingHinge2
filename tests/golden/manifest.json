@@ -1,7 +1,7 @@
 {
   "tool": "tools/golden.mjs",
   "target": "index.html",
-  "targetSha256": "310387955ea6f05a7802a264ad87d80f98436e172b39ed64696dadb1964c317d",
+  "targetSha256": "e6d19b1027189a8c487af37f89d9f76f809863dedf417509acc8337ff8e8472b",
   "capturedAt": "2026-07-28",
   "caseCount": 86,
   "cases": {
@@ -721,17 +721,17 @@
     },
     "board__hexslit__soft__v": {
       "dxf": {
-        "bytes": 138795,
-        "sha256": "336d4ec8a92e1cddb066a61584ec42f79ae280ec38f92552e9bf50828f079646"
+        "bytes": 138196,
+        "sha256": "5b167ba5006c7feb31d0a65d5ae760a784142ef3b91a1f645f58162db3e7e37e"
       },
       "svg": {
-        "bytes": 64240,
-        "sha256": "143acd6b31f2bfd2d96523d2eb123abec7d7fd0f32cbb8af84f08806c8edb0f7"
+        "bytes": 59421,
+        "sha256": "88398d7cbe80d037f7e001e094ef1177d7b4129ec414e059d0cde522df4f78a0"
       },
-      "polylines": 862,
-      "cutLen": 6730.298,
-      "flexScore": 2.138,
-      "minRadius": 15.382,
+      "polylines": 651,
+      "cutLen": 7056.273,
+      "flexScore": 2.248,
+      "minRadius": 15.007,
       "params": {
         "hr": 4,
         "hs": 1,
@@ -741,17 +741,17 @@
     },
     "board__hexslit__soft__h": {
       "dxf": {
-        "bytes": 139479,
-        "sha256": "f5a6cee1464f29895a4a17bdd0e739b6e4f259581a0c816f3ec519fb8c18f39c"
+        "bytes": 138881,
+        "sha256": "e4414ad02a54278bbfdb27cceec02275e5f4402339565e7675ff441027631ff7"
       },
       "svg": {
-        "bytes": 64117,
-        "sha256": "d05e1f9bd7396150484d1b6408a2cf62bf9ccba36b6a7c43439a827d62b998c7"
+        "bytes": 59957,
+        "sha256": "c40620cc7658c6db4cf7c299c150bb132670cfa81df6eba9b2cb6b5c781ea860"
       },
-      "polylines": 862,
-      "cutLen": 6785.371,
-      "flexScore": 2.157,
-      "minRadius": 15.317,
+      "polylines": 664,
+      "cutLen": 7088.604,
+      "flexScore": 2.259,
+      "minRadius": 14.97,
       "params": {
         "hr": 4,
         "hs": 1,
@@ -761,17 +761,17 @@
     },
     "board__hexslit__std__v": {
       "dxf": {
-        "bytes": 84272,
-        "sha256": "824145c2ad5aa432b633596973f452073891b44ce6f33129e247c7b9abf8b928"
+        "bytes": 85500,
+        "sha256": "9aa249559df8a1ef03e64f59a772a5d5d20c75de274a1927e91e854b2a94810c"
       },
       "svg": {
-        "bytes": 39144,
-        "sha256": "06b16252ec1f0782f96ea23901cad9edc4973ef6689bf86b8411659cc60e51df"
+        "bytes": 37606,
+        "sha256": "fded4acc3ec833276b44ef6823027fe353ce3de285dd9b9d1fc7d9ac819c2e8a"
       },
-      "polylines": 508,
-      "cutLen": 5207.377,
-      "flexScore": 1.817,
-      "minRadius": 16.596,
+      "polylines": 396,
+      "cutLen": 5441.513,
+      "flexScore": 1.905,
+      "minRadius": 16.244,
       "params": {
         "hr": 5,
         "hs": 1.4,
@@ -781,17 +781,17 @@
     },
     "board__hexslit__std__h": {
       "dxf": {
-        "bytes": 86648,
-        "sha256": "cc5ef9c472f8b5071bb183ac182bf2a32218f8dfd05ec9594a61606ead2d113c"
+        "bytes": 87926,
+        "sha256": "cc82acbf747e2d3fef28703a33465a4aed170b5f5529394ec67839085a55caf7"
       },
       "svg": {
-        "bytes": 39787,
-        "sha256": "f1953d96a0815394e2f0d9fc07624d43814db0a9fa76ea025602a5c17694b18f"
+        "bytes": 38093,
+        "sha256": "baa29c8fa801eaa3f8e83f200ea6dd6f032eda6bc0df12fb64bc3823bf798d72"
       },
-      "polylines": 516,
-      "cutLen": 5225.113,
-      "flexScore": 1.824,
-      "minRadius": 16.568,
+      "polylines": 404,
+      "cutLen": 5456.247,
+      "flexScore": 1.911,
+      "minRadius": 16.222,
       "params": {
         "hr": 5,
         "hs": 1.4,
@@ -801,17 +801,17 @@
     },
     "board__hexslit__firm__v": {
       "dxf": {
-        "bytes": 42370,
-        "sha256": "5f2a72aff69c9b257982265d7ee79bf9cbeb84210b453d50c881bfcdd392928d"
+        "bytes": 42749,
+        "sha256": "70a6019ec6c1c850c004af9e823263e206550ce09ba746fb6b2486efee4e7dc3"
       },
       "svg": {
-        "bytes": 20000,
-        "sha256": "678a996b1d6ab69c3721edf19b09a3f818a90e057772e609b465c17434dc6e60"
+        "bytes": 18608,
+        "sha256": "d7c7529d48cdec646caa287501be795d24bfc07c986173eb137648ed8657b5f7"
       },
-      "polylines": 263,
-      "cutLen": 3644.098,
-      "flexScore": 1.454,
-      "minRadius": 18.57,
+      "polylines": 196,
+      "cutLen": 3820.479,
+      "flexScore": 1.533,
+      "minRadius": 17.845,
       "params": {
         "hr": 7,
         "hs": 2.2,
@@ -821,17 +821,17 @@
     },
     "board__hexslit__firm__h": {
       "dxf": {
-        "bytes": 42532,
-        "sha256": "3b17854d4c5cf454481f3819437d0db2799b6f2a7e5fb3dfe289299f59400982"
+        "bytes": 43048,
+        "sha256": "013ad6a60fc03138b367cb0f489cfac5662d5568a508d13b21889a88f64d1f45"
       },
       "svg": {
-        "bytes": 20402,
-        "sha256": "894f211200141d10f84e87cc81c8b517faeb4a3678e6a4fa9282c8ecbe7884d9"
+        "bytes": 18728,
+        "sha256": "414ec31dfed0b58200bd2a9f119bf7e0995a78a64992a94727460548d98699b2"
       },
-      "polylines": 272,
-      "cutLen": 3591.74,
-      "flexScore": 1.431,
-      "minRadius": 18.873,
+      "polylines": 198,
+      "cutLen": 3785.535,
+      "flexScore": 1.517,
+      "minRadius": 17.919,
       "params": {
         "hr": 7,
         "hs": 2.2,
@@ -1302,17 +1302,17 @@
     },
     "margin2__hexslit__std__v": {
       "dxf": {
-        "bytes": 77901,
-        "sha256": "371dabc3d7796c197f14c7fe98b450cd5925d3f56d632fc1f5b9d8aad7aae0ef"
+        "bytes": 79004,
+        "sha256": "2fced528c40d69d0e54ed7b107b26cc7ad44006e6a59272f12dde1b977b088c4"
       },
       "svg": {
-        "bytes": 35874,
-        "sha256": "8219b9cee87f4b6af5f97d3ab6975040921201bf750951aa1ea1d0169e4fab72"
+        "bytes": 34380,
+        "sha256": "44c6ef69f8af15a55f5fb7911b699081aa11f009b68b5187020c57c9be44973f"
       },
-      "polylines": 463,
-      "cutLen": 4808.827,
-      "flexScore": 1.667,
-      "minRadius": 17.231,
+      "polylines": 358,
+      "cutLen": 5047.498,
+      "flexScore": 1.757,
+      "minRadius": 16.845,
       "params": {
         "hr": 5,
         "hs": 1.4,
@@ -1616,14 +1616,14 @@
     },
     "testsheet__hexslit__std": {
       "dxf": {
-        "bytes": 89533,
-        "sha256": "b4afdae961185a80fedad3deaf9c3b74cc6aa6d379bcded833123108245a50bd"
+        "bytes": 92716,
+        "sha256": "9389e27e51d71ee0148a7cab5c0be963885ac6824eb617723d7b74d1240a63a1"
       },
       "svg": {
-        "bytes": 42689,
-        "sha256": "1e1eac62a58885a3b88bbbc3c87e4cf455a22acbeaf54329b67565c1bf5acaee"
+        "bytes": 40919,
+        "sha256": "1cb0c64f7e01aea1114a80f4b22b4df1ae24f014d92eeed9c175563e95b11735"
       },
-      "polylines": 584,
+      "polylines": 479,
       "W": 70,
       "H": 174,
       "key": "hs",

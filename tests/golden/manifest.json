@@ -1,9 +1,9 @@
 {
   "tool": "tools/golden.mjs",
   "target": "index.html",
-  "targetSha256": "e6d19b1027189a8c487af37f89d9f76f809863dedf417509acc8337ff8e8472b",
+  "targetSha256": "3c958adede2b35ed18e95f3a8a47e70e6b1397756650233a70666f147d6740a8",
   "capturedAt": "2026-07-28",
-  "caseCount": 86,
+  "caseCount": 94,
   "cases": {
     "board__straight__soft__v": {
       "dxf": {
@@ -839,6 +839,126 @@
         "gap": 3
       }
     },
+    "board__ehex__soft__v": {
+      "dxf": {
+        "bytes": 83134,
+        "sha256": "9201e5605b8fe8e4cf857fef0daed48cfda95856b0f7878cc694f49fcfbfa899"
+      },
+      "svg": {
+        "bytes": 34985,
+        "sha256": "270908e627d08914b0e87e74f10d09be6b5bc3d585268b34d737c223ea6b0d9e"
+      },
+      "polylines": 495,
+      "cutLen": 5126.938,
+      "flexScore": 1.874,
+      "minRadius": 16.367,
+      "params": {
+        "el": 11,
+        "eh": 2.4,
+        "es": 0.9,
+        "gap": 1.5
+      }
+    },
+    "board__ehex__soft__h": {
+      "dxf": {
+        "bytes": 84824,
+        "sha256": "4afcbcff6e209ed81b24cdd7fab027aafc59a45167ebec7ae788bc958bf35d07"
+      },
+      "svg": {
+        "bytes": 35681,
+        "sha256": "600f91272d520b86b18fbf9dcd271978e65b5b519c864f3f437f4715e1a35c45"
+      },
+      "polylines": 512,
+      "cutLen": 5088.126,
+      "flexScore": 1.859,
+      "minRadius": 16.428,
+      "params": {
+        "el": 11,
+        "eh": 2.4,
+        "es": 0.9,
+        "gap": 1.5
+      }
+    },
+    "board__ehex__std__v": {
+      "dxf": {
+        "bytes": 47629,
+        "sha256": "855860d8d2c3ea1e8b9be7fcfca03e43146cd088372120c076f9d020aa0798d9"
+      },
+      "svg": {
+        "bytes": 20601,
+        "sha256": "ecd454e07eceef3835952c10da98419b05379bee31b4870dba9be046f33f498b"
+      },
+      "polylines": 297,
+      "cutLen": 3795.762,
+      "flexScore": 1.522,
+      "minRadius": 17.897,
+      "params": {
+        "el": 14,
+        "eh": 3.2,
+        "es": 1.3,
+        "gap": 2
+      }
+    },
+    "board__ehex__std__h": {
+      "dxf": {
+        "bytes": 48526,
+        "sha256": "185c37ef9bec3eb001d37ec069f5fd39e077d8709edfaf32a6b862353ccbdbe3"
+      },
+      "svg": {
+        "bytes": 20714,
+        "sha256": "22f8f693f4604b61ef0fac1cc239507eea21def1cd850b7e0057103a730d06c1"
+      },
+      "polylines": 302,
+      "cutLen": 3803.417,
+      "flexScore": 1.525,
+      "minRadius": 17.881,
+      "params": {
+        "el": 14,
+        "eh": 3.2,
+        "es": 1.3,
+        "gap": 2
+      }
+    },
+    "board__ehex__firm__v": {
+      "dxf": {
+        "bytes": 26357,
+        "sha256": "7df4a35bdccf6e0ceaffb0098c51e98ea7e5c1106fc0acb7a5e21fa0029461ff"
+      },
+      "svg": {
+        "bytes": 11464,
+        "sha256": "3d479a2a052f9ef6b6485448a57365586f646ed37c923a10d5fc463234c7214f"
+      },
+      "polylines": 165,
+      "cutLen": 2758.194,
+      "flexScore": 1.201,
+      "minRadius": 22.478,
+      "params": {
+        "el": 18,
+        "eh": 4.4,
+        "es": 2,
+        "gap": 3
+      }
+    },
+    "board__ehex__firm__h": {
+      "dxf": {
+        "bytes": 27916,
+        "sha256": "8dde8a84b6f1d86ce540284817dc50ab9867a5fc32c4dc2ac3cdb4dea4a04279"
+      },
+      "svg": {
+        "bytes": 11735,
+        "sha256": "c0dddccb3aa25f963dbde68b8827035e586280b0304d81e9c778365a7bb0daea"
+      },
+      "polylines": 171,
+      "cutLen": 2795.3,
+      "flexScore": 1.22,
+      "minRadius": 22.133,
+      "params": {
+        "el": 18,
+        "eh": 4.4,
+        "es": 2,
+        "gap": 3
+      }
+    },
     "board__bone__soft__v": {
       "dxf": {
         "bytes": 357038,
@@ -1320,6 +1440,26 @@
         "gap": 2
       }
     },
+    "margin2__ehex__std__v": {
+      "dxf": {
+        "bytes": 44097,
+        "sha256": "1206acda3aa7057c69edfced163cb94e3083830cae83fd85b70388ad773be60e"
+      },
+      "svg": {
+        "bytes": 19086,
+        "sha256": "845ea64495c97105ce6ea4c7546d4256438fd54f63746784dde036e8d5272f99"
+      },
+      "polylines": 279,
+      "cutLen": 3499.499,
+      "flexScore": 1.39,
+      "minRadius": 19.431,
+      "params": {
+        "el": 14,
+        "eh": 3.2,
+        "es": 1.3,
+        "gap": 2
+      }
+    },
     "margin2__bone__std__v": {
       "dxf": {
         "bytes": 307537,
@@ -1633,6 +1773,27 @@
         1.4,
         1.7,
         2
+      ]
+    },
+    "testsheet__ehex__std": {
+      "dxf": {
+        "bytes": 52124,
+        "sha256": "d42cf9cabe7ec4788df6b7f9a40456f689eab202cfd94cfca8a2348cca387520"
+      },
+      "svg": {
+        "bytes": 22395,
+        "sha256": "8816253899b9f65ca2908beb8eaf36476808607ff1ef0a67046c1fa37084a1e2"
+      },
+      "polylines": 336,
+      "W": 70,
+      "H": 174,
+      "key": "es",
+      "vals": [
+        0.8,
+        1,
+        1.3,
+        1.6,
+        1.8
       ]
     },
     "testsheet__bone__std": {

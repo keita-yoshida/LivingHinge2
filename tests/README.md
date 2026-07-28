@@ -18,24 +18,24 @@ node tools/golden.mjs capture   # ゴールデンを採取し直す（= 出力�
 `regenerate()` → `makeDXF()` / `makeSVG()` / `buildTestSheet()` を直接呼んでいます。
 つまりユーザーがダウンロードボタンを押したときとまったく同じ経路の出力です。
 
-## 採取マトリクス（86ケース × DXF/SVG = 172ファイル）
+## 採取マトリクス（94ケース × DXF/SVG = 188ファイル）
 
 | 区分 | 内容 | 件数 |
 |---|---|---|
-| `board__<pattern>__<preset>__<dir>` | 全10パターン × 3プリセット × 縦横 (120×70mm, 余白0, 外枠あり) | 60 |
-| `margin2__<pattern>__std__v` | 余白 2mm（外周クリップの挙動を固定。tri は §7 で 2mm 以上推奨） | 10 |
+| `board__<pattern>__<preset>__<dir>` | 全11パターン × 3プリセット × 縦横 (120×70mm, 余白0, 外枠あり) | 66 |
+| `margin2__<pattern>__std__v` | 余白 2mm（外周クリップの挙動を固定。tri は §7 で 2mm 以上推奨） | 11 |
 | `noframe__straight__std__v` | 外枠なし | 1 |
 | `extreme__spiral__{fine,coarse,odd}` | メアンダー極端値 cs=5/sw=0.8, cs=40/sw=5, cs=13/sw=1.7（CLAUDE.md §6.2 と同条件） | 3 |
 | `size__straight__small` / `size__hex__large` | 20×20mm / 400×300mm（列配置とクリップの端条件） | 2 |
-| `testsheet__<pattern>__std` | テストピース面付け（§7.5） | 10 |
+| `testsheet__<pattern>__std` | テストピース面付け（§7.5） | 11 |
 
 `manifest.json` に各ケースの sha256・バイト数に加え、ポリライン数・総カット長・柔軟性スコア・
 推定最小曲げ半径・使用パラメータを記録しています。**ファイルが差分ゼロでも manifest の統計値を見れば
 何が変わったかの当たりが付く**ようにするためです。
 
-## 採取時点（初回）
+## 採取時点（v11 / 横長六角の追加時）
 
-- `index.html` sha256: `2f5206530eb1f895583540e0d3a53eb5f1d049f28f1737c9e418c789a5469055`
+- `index.html` sha256: `3c958adede2b35ed18e95f3a8a47e70e6b1397756650233a70666f147d6740a8`
 - 標準設定（120×70mm / std / 縦）での実測値:
 
 | パターン | ポリライン | 総カット長 | 柔軟性 | 推定R_min | DXFサイズ |
@@ -46,9 +46,10 @@ node tools/golden.mjs capture   # ゴールデンを採取し直す（= 出力�
 | cross | 141 | 1,870 mm | 0.79 | 34 mm | 6 KB |
 | arc | 81 | 1,683 mm | 0.69 | 39 mm | 37 KB |
 | hex | 221 | 2,868 mm | 0.94 | 29 mm | 34 KB |
-| hexslit | 508 | 5,207 mm | 1.82 | 17 mm | 82 KB |
+| hexslit | 396 | 5,442 mm | 1.91 | 16 mm | 83 KB |
+| ehex | 297 | 3,796 mm | 1.52 | 18 mm | 47 KB |
 | bone | 101 | 3,193 mm | 1.50 | 18 mm | **335 KB** |
-| tri | 770 | 5,643 mm | 2.66 | 14 mm | 71 KB |
+| tri | 417 | 8,096 mm | 3.90 | 11 mm | 51 KB |
 | spiral | 169 | 6,140 mm | 4.10 | 11 mm | 46 KB |
 
 spiral の 6,140mm は CLAUDE.md §7 の記載値と一致しており、採取経路が正しいことの裏付けになっています。

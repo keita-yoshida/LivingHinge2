@@ -31,7 +31,7 @@ const PORT = 8791;
 const sha = (s) => createHash("sha256").update(s, "utf8").digest("hex");
 
 /* ---------- 採取マトリクス ---------- */
-const PATTERNS = ["straight", "wave", "diamond", "cross", "arc", "hex", "hexslit", "bone", "tri", "spiral"];
+const PATTERNS = ["straight", "wave", "diamond", "cross", "arc", "hex", "hexslit", "ehex", "bone", "tri", "spiral"];
 const PRESETS = ["soft", "std", "firm"];
 const BASE = { W: 120, H: 70, margin: 0, frame: true };
 

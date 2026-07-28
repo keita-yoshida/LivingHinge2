@@ -432,6 +432,7 @@ const state = {
     rw:1.2,           // hexslit ring width
     br:1.6,           // bone lens half-width
     ts:18, td:1.0,    // tri cell size / ring spacing
+    el:14, eh:3.2, es:1.3, // ehex length / height / row band
     cs:10, sw:1.4, web:2 // meander cell / arm width (web kept for hash compat)
   }
 };
@@ -457,6 +458,9 @@ const PARAM_DEFS = {
   br:   {label:"ふくらみ",  hint:"レンズの膨らみ幅",  min:0.4, max:5,  step:0.1, unit:"mm"},
   ts:   {label:"三角形サイズ",hint:"",               min:8,   max:60, step:1,   unit:"mm"},
   td:   {label:"リング間隔",hint:"狭いほど柔らかい",  min:0.6, max:5,  step:0.1, unit:"mm"},
+  el:   {label:"六角形の長さ",hint:"横長六角の長軸",   min:5,   max:40, step:0.5, unit:"mm"},
+  eh:   {label:"六角形の高さ",hint:"低いほど柔らかい",  min:1.2, max:12, step:0.1, unit:"mm"},
+  es:   {label:"行間の帯",  hint:"狭いほど柔らかい",   min:0.4, max:8,  step:0.1, unit:"mm"},
   cs:   {label:"セルサイズ",hint:"渦1個の大きさ",       min:5,   max:40, step:0.5, unit:"mm"},
   sw:   {label:"アーム幅",  hint:"セルの奇数分割に自動調整",min:0.8, max:5,  step:0.1, unit:"mm"},
   web:  {label:"セル間隔",  hint:"",                    min:0.8, max:8,  step:0.1, unit:"mm"},
@@ -666,6 +670,40 @@ const GEN = {
     return clipRect(out,x0,y0,x1,y1);
   },
 
+  ehex(s,x0,y0,x1,y1){
+    // fequalsf.com "parametric kerf" #5 (reference fob): horizontally elongated
+    // hexagon slots laid out in staggered rows.
+    //
+    // 参照フォブの構造:
+    //  - モチーフは横長六角形(長軸 el / 高さ eh)。平坦部は長軸の EHEX_FLAT。
+    //  - 行内で隣り合うモチーフは**尖端を共有する**。各モチーフは上下2本の
+    //    ポリラインで描き、両尖端で gap/2 ずつトリムするので、共有尖端には
+    //    4本のカット端が集まり「+」型のブリッジが残る。これが参照シートの
+    //    各接合部に見える小さなXである。
+    //  - そのブリッジを通って材料が上下左右すべてに繋がるため**何も脱落しない**。
+    //  - 行は el/2 ずつ千鳥にずらす。行間には帯 es が残る。
+    const {el,eh,es,gap}=s.p, out=[];
+    const EHEX_FLAT=0.60;                       // 平坦部/長軸(参照フォブの比率)
+    const a=el/2, b=eh/2, f=a*EHEX_FLAT;
+    const rowStep=eh+es;
+    const t=Math.min(0.45,(gap/2)/Math.hypot(a-f,b));   // 斜辺に沿ったトリム比
+    const L=[-a,0], R=[a,0];
+    const UL=[-f,-b], UR=[f,-b], LL=[-f,b], LR=[f,b];
+    const rows=Math.ceil((y1-y0)/rowStep)+2;
+    for(let r=-1;r<rows;r++){
+      const cy=y0+b+r*rowStep;
+      const xoff=(((r%2)+2)%2)?el/2:0;
+      const cols=Math.ceil((x1-x0)/el)+2;
+      for(let c=-1;c<cols;c++){
+        const cx=x0+a+c*el+xoff;
+        const mv=p=>[cx+p[0],cy+p[1]];
+        out.push([lerpPt(L,UL,t),UL,UR,lerpPt(R,UR,t)].map(mv));   // 上半分
+        out.push([lerpPt(L,LL,t),LL,LR,lerpPt(R,LR,t)].map(mv));   // 下半分
+      }
+    }
+    return clipRect(out,x0,y0,x1,y1);
+  },
+
   bone(s,x0,y0,x1,y1){
     // fequalsf.com "parametric kerf" #6/#7 (reference DXF motif, W=1.205 H=0.133):
     // closed smooth outline = central lens, thin necks, small round bulb at
@@ -786,14 +824,15 @@ const PATTERNS=[
   {id:"arc",     name:"アーチ", params:["pitch","cut","gap","bulge"]},
   {id:"hex",     name:"ハニカム",params:["hr","hs","gap"]},
   {id:"hexslit", name:"スリット六角",params:["hr","hs","rw","gap"]},
+  {id:"ehex",    name:"横長六角",params:["el","eh","es","gap"]},
   {id:"bone",    name:"ドッグボーン",params:["pitch","cut","gap","br"]},
   {id:"tri",     name:"入れ子三角",params:["ts","td","gap"]},
   {id:"spiral",  name:"メアンダー",params:["cs","sw"]},
 ];
 const PRESETS={
-  soft:{pitch:4,  cut:30, gap:1.5, hr:4, hs:1.0, rw:0.9, cs:8,  sw:1.1, br:1.1, ts:14, td:0.8},
-  std: {pitch:6,  cut:20, gap:2,   hr:5, hs:1.4, rw:1.2, cs:10, sw:1.4, br:1.6, ts:18, td:1.0},
-  firm:{pitch:9,  cut:14, gap:3,   hr:7, hs:2.2, rw:1.8, cs:14, sw:2,   br:2.2, ts:24, td:1.5},
+  soft:{pitch:4,  cut:30, gap:1.5, hr:4, hs:1.0, rw:0.9, cs:8,  sw:1.1, br:1.1, ts:14, td:0.8, el:11, eh:2.4, es:0.9},
+  std: {pitch:6,  cut:20, gap:2,   hr:5, hs:1.4, rw:1.2, cs:10, sw:1.4, br:1.6, ts:18, td:1.0, el:14, eh:3.2, es:1.3},
+  firm:{pitch:9,  cut:14, gap:3,   hr:7, hs:2.2, rw:1.8, cs:14, sw:2,   br:2.2, ts:24, td:1.5, el:18, eh:4.4, es:2.0},
 };
 
 /* ---------- material profile & bend radius heuristic ---------- */
@@ -810,6 +849,7 @@ function flexScoreOf(polys,pobj,pattern){
   const cutLen=polys.reduce((a,p)=>a+polyLen(p),0);
   const density=cutLen/Math.max(1,state.W*state.H);
   const charLen=(pattern==="hex"||pattern==="hexslit")?pobj.hr*2
+    :pattern==="ehex"?pobj.el
     :pattern==="tri"?pobj.ts
     :pattern==="spiral"?pobj.cs*pobj.cs/Math.max(1,pobj.sw)/2
     :pobj.cut;
@@ -1026,7 +1066,7 @@ function updateMinR(score){
 /* ---------- warnings ---------- */
 function renderWarnings(){
   const w=[];
-  const colPat=!["hex","hexslit","spiral","tri"].includes(state.pattern);
+  const colPat=!["hex","hexslit","ehex","spiral","tri"].includes(state.pattern);
   if(colPat&&state.p.gap<1) w.push({t:"ブリッジ幅が1mm未満です。薄い素材以外では破損しやすくなります。",e:false});
   else if(colPat&&state.p.gap<state.mat.thick) w.push({t:`ブリッジ幅が板厚（${state.mat.thick}mm）より小さくなっています。板厚の1〜1.5倍以上を推奨します。`,e:false});
   if(colPat&&state.p.pitch<3) w.push({t:"列の間隔が狭すぎると強度が大きく低下します。テストカットを推奨します。",e:false});
@@ -1035,6 +1075,7 @@ function renderWarnings(){
   if(state.pattern==="spiral"&&state.p.cs<state.p.sw*4) w.push({t:"セルサイズに対してアーム幅が大きすぎるため、渦を生成できません。",e:true});
   if(state.pattern==="diamond"&&state.p.dw>=state.p.pitch-0.5) w.push({t:"ひし形の幅が列間隔に近すぎるため自動的に制限されています。",e:false});
   if(state.pattern==="cross"&&state.p.cw>=state.p.pitch-0.7) w.push({t:"横カット長が列間隔に近すぎるため自動的に制限されています。",e:false});
+  if(state.pattern==="ehex"&&state.p.es<state.mat.thick*0.8) w.push({t:"行間の帯が細いため折れやすくなります。板厚と同程度以上を推奨します。",e:false});
   if(state.pattern==="hexslit"&&state.p.hs<state.mat.thick*0.8) w.push({t:"六角形どうしの帯が細いため折れやすくなります。板厚と同程度以上を推奨します。",e:false});
   if(state.pattern==="hexslit") w.push({t:"内側の六角形の芯は切り抜かれて脱落します（このパターン本来の仕様です）。",e:false});
   if(state.pattern==="tri"&&state.p.td<state.mat.thick*0.4) w.push({t:"リング間隔が狭いため残る帯が細くなります。テストカットを推奨します。",e:false});
@@ -1099,7 +1140,7 @@ function syncAll(){
 /* pattern cards with live thumbnails */
 function thumbSVG(id){
   const th={pattern:id,W:66,H:44,frame:false,dir:"v",margin:2,view:"laser",
-    p:{pitch:8,cut:12,gap:2,dw:3,amp:2,wlen:12,cw:4,bulge:2.4,hr:6,hs:1.6,rw:1.3,br:1.6,ts:19,td:1.1,cs:15,sw:2.2,web:2}};
+    p:{pitch:8,cut:12,gap:2,dw:3,amp:2,wlen:12,cw:4,bulge:2.4,hr:6,hs:1.6,rw:1.3,br:1.6,ts:19,td:1.1,el:16,eh:3.6,es:1.5,cs:15,sw:2.2,web:2}};
   const polys=GEN[id](th,2,2,64,42);
   const s=polys.map(p=>p.length===2
     ?`<line x1="${p[0][0].toFixed(2)}" y1="${p[0][1].toFixed(2)}" x2="${p[1][0].toFixed(2)}" y2="${p[1][1].toFixed(2)}"/>`
@@ -1166,6 +1207,7 @@ document.getElementById("btnSolve").onclick=()=>{
   let hard,soft;
   if(pat==="hex"){hard={hr:8,hs:2.6,gap:3};soft={hr:3.5,hs:0.6,gap:1};}
   else if(pat==="hexslit"){hard={hr:9,hs:3,gap:3};soft={hr:4,hs:0.8,gap:1};}
+  else if(pat==="ehex"){hard={el:40,eh:12,es:8,gap:5};soft={el:7,eh:1.4,es:0.45,gap:0.8};}
   else if(pat==="tri"){hard={ts:28,td:2.4,gap:3};soft={ts:12,td:0.7,gap:1};}
   else if(pat==="spiral"){hard={sw:Math.min(2.6,state.p.cs/4.5)};soft={sw:1};} // セルサイズは維持しアーム幅のみ調整
   else if(pat==="bone"){hard={pitch:12,cut:8,gap:4,br:1};soft={pitch:3,cut:Math.max(14,Math.min(60,genH*0.5)),gap:1,br:1.4};}
@@ -1257,7 +1299,7 @@ function makeSVG(polys,boardW,boardH){
 /* ---------- test piece sheet ----------
    Small coupons with one parameter stepped across a range, tiled on one sheet.
    Pieces are identified by edge notches (1..n) because the SVG contract forbids text. */
-const TEST_KEY={hex:"hs",hexslit:"hs",tri:"td",spiral:"sw"};   // others: gap
+const TEST_KEY={hex:"hs",hexslit:"hs",ehex:"es",tri:"td",spiral:"sw"};   // others: gap
 const TEST={pieceW:70,pieceH:30,gapY:6,grip:8,factors:[0.6,0.8,1.0,1.2,1.4]};
 function testPieceVariants(){
   const key=TEST_KEY[state.pattern]||"gap";

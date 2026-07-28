@@ -21,7 +21,9 @@ import { chromium } from "playwright";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const GOLDEN_DIR = path.join(ROOT, "tests", "golden");
-const TARGET = "index.html";
+// 検証対象はビルド成果物（実際に配布される単一HTML）。
+// HINGE_TARGET で差し替えられる（例: 旧 index.html との比較）。
+const TARGET = process.env.HINGE_TARGET || "dist/index.html";
 const PORT = 8791;
 
 const sha = (s) => createHash("sha256").update(s, "utf8").digest("hex");
@@ -81,35 +83,37 @@ function serve(dir, port) {
 /* ---------- ブラウザ内で1ケース分の出力を作る ---------- */
 /* この関数はページ側で評価される。アプリのグローバル(state/GEN/makeDXF...)を直接使う。 */
 const EXTRACT = (c) => {
+  const A = window.__app;   // ESM 化でグローバルが無くなったため、main.ts が露出するフック経由で触る
+  const { state } = A;
   // パラメータプールは累積変化するので毎回まっさらな既定値へ戻す
   Object.keys(window.__defaultP).forEach((k) => { state.p[k] = window.__defaultP[k]; });
-  Object.assign(state.p, PRESETS[c.preset]);
+  Object.assign(state.p, A.PRESETS[c.preset]);
   if (c.p) Object.assign(state.p, c.p);
   state.pattern = c.pattern;
   state.dir = c.dir;
   state.W = c.W; state.H = c.H;
   state.margin = c.margin; state.frame = c.frame;
-  regenerate();
+  A.regenerate();
 
   const round = (v) => Math.round(v * 1000) / 1000;
   if (c.kind === "testsheet") {
-    const t = buildTestSheet();
+    const t = A.buildTestSheet();
     return {
-      dxf: makeDXF(t.polys, t.H),
-      svg: makeSVG(t.polys, t.W, t.H),
+      dxf: A.makeDXF(t.polys, t.H),
+      svg: A.makeSVG(t.polys, t.W, t.H),
       stats: { polylines: t.polys.length, W: round(t.W), H: round(t.H), key: t.key, vals: t.vals },
     };
   }
-  const flex = flexScoreOf(cuts, state.p, state.pattern);
+  const flex = A.flexScoreOf(A.cuts, state.p, state.pattern);
   return {
-    dxf: makeDXF(),
-    svg: makeSVG(),
+    dxf: A.makeDXF(),
+    svg: A.makeSVG(),
     stats: {
-      polylines: cuts.length + (framePoly ? 1 : 0),
-      cutLen: round(totalCutLen),
+      polylines: A.cuts.length + (A.framePoly ? 1 : 0),
+      cutLen: round(A.totalCutLen),
       flexScore: round(flex),
-      minRadius: round(estMinRadius(flex)),
-      params: Object.fromEntries(PATTERNS.find((x) => x.id === state.pattern).params.map((k) => [k, state.p[k]])),
+      minRadius: round(A.estMinRadius(flex)),
+      params: Object.fromEntries(A.PATTERNS.find((x) => x.id === state.pattern).params.map((k) => [k, state.p[k]])),
     },
   };
 };
@@ -133,7 +137,7 @@ async function run(mode) {
   });
 
   await page.goto(`http://127.0.0.1:${PORT}/${TARGET}`, { waitUntil: "load" });
-  await page.evaluate(() => { window.__defaultP = JSON.parse(JSON.stringify(state.p)); });
+  await page.evaluate(() => { window.__defaultP = JSON.parse(JSON.stringify(window.__app.state.p)); });
   if (pageErrors.length) throw new Error("読み込み時にエラー:\n" + pageErrors.join("\n"));
 
   const manifest = {

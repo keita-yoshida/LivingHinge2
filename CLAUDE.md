@@ -1,13 +1,22 @@
 # リビングヒンジ ジェネレーター — 開発引き継ぎ資料
 
 レーザー加工用カーフベンディング/リビングヒンジパターンを生成するWebアプリ。
-現状は単一HTMLファイル(`index.html`)として完結し、WordPressのuploads配下に置くだけで公開できる。
+ソースは Vite + TypeScript のモジュール構成で、**ビルドすると単一HTMLに畳まれる**。
+成果物 `dist/index.html` を WordPressのuploads配下に置くだけで公開できる。
 
 - 公開URL: https://laser-kakouki.com/wp-content/uploads/2025/12/livinghinge.html
-- 作業ファイル名は `index.html`(公開時に `livinghinge.html` へリネーム)
-- 現行サイズ: 約64KB / 1,381行
+- 配布物は `dist/index.html`(公開時に `livinghinge.html` へリネーム)。約48KB / gzip 17KB
 - **実行時の外部依存: ゼロ**(v6でGoogle Fonts読み込みを削除。フォントはOS標準のみ)
-- 開発時の依存: 検証ツールのみ(Playwright / Chromium。`tools/*.mjs`)
+- 開発時の依存: Vite / TypeScript / Playwright(`package.json`)
+
+```sh
+npm ci             # 初回
+npm run dev        # 開発サーバ
+npm run build      # 型チェック + 単一HTMLへビルド → dist/index.html
+npm test           # ビルドしてから ゴールデン照合(§6.0) + スモークテスト(§6.4)
+```
+
+ビルド済みHTMLはCIの成果物(`livinghinge-html`)としてもダウンロードできる。
 
 ## 方針(v8で転換)
 
@@ -42,26 +51,38 @@
 
 ## 2. ファイル構成
 
+v8で単一ファイルから Vite + TypeScript のモジュール構成へ移行した。
+**移行時、86ケースすべてでDXF/SVG出力がバイト一致することを確認済み**(§6.0)。
+
 ```
-index.html            アプリ本体(単一ファイル)
-├─ <style>            デザイントークン(:root CSS変数)、レイアウト/パネル/ステージ/モバイル
-├─ <body>             ヘッダー / 左パネル(パターン・プリセット・サイズ・材料・調整・DL・ヒント)
-│                     / ステージ(表示モード切替・ズーム・viewport・統計チップ)
-│                     viewport内: <svg #pv> のみ
-└─ <script>
-   ├─ state / GLOBAL_DEFS / PARAM_DEFS     状態とスライダー定義
-   ├─ 幾何ユーティリティ                    clipHalf / clipRect / polyLen / columnXs / centerYs
-   ├─ GEN = {straight,wave,diamond,cross,arc,hex,hexslit,bone,tri,spiral}  ← 全10パターン生成器
-   ├─ PATTERNS / PRESETS
-   ├─ MATERIALS / flexScoreOf / estMinRadius / genPolysFor   材料プロファイルと半径推定(§6.5)
-   ├─ regenerate()                          生成→renderView()→統計→警告→hash更新
-   ├─ 2Dプレビュー                          renderPreview / fitView / zoomAt(SVG viewBox操作)
-   ├─ 入力系                                pointer(パン/ピンチ)/ wheel / ボタン
-   ├─ コントロールUI生成                     ctlHTML / bindCtl / buildGlobalCtls / buildParamCtls / buildPatternCards
-   ├─ エクスポート                          makeDXF(polys?,H?) / makeSVG(polys?,W?,H?) / download
-   │                                        引数省略時は現在の盤面。テストピースは引数渡しで再利用(§7.5)
-   ├─ テストピース                          TEST / testPieceVariants / buildTestSheet / downloadTestSheet
-   └─ hash共有 / toast / init
+index.html            Viteのエントリ（HTMLの骨組みのみ。これ単体では動かない）
+vite.config.ts        vite-plugin-singlefile で1枚のHTMLに畳む（契約 §1-3）
+tsconfig.json         strict。ただし strictNullChecks だけ off（DOM取得の null 合併を避けるため）
+
+src/
+├─ types.ts           Point / Polyline / Params / AppState など共有型
+├─ state.ts           state・GLOBAL_DEFS・PARAM_DEFS
+├─ board.ts           現在の盤面 {cuts, framePoly, totalCutLen}。描画・統計・出力の唯一のソース
+├─ dom.ts             型付き $ / $$ ヘルパー
+├─ app.ts             regenerate()（生成→描画→統計→警告→hash更新）
+├─ main.ts            init と window.__app（検証用フック）
+├─ geometry/
+│  ├─ util.ts         clipHalf / clipRect / polyLen / columnXs / centerYs
+│  └─ patterns.ts     GEN（全10パターン生成器）/ PATTERNS / PRESETS
+├─ material.ts        MATERIALS / flexScoreOf / estMinRadius / genPolysFor（§6.5）
+├─ render2d.ts        renderPreview / fitView / zoomAt / 入力系（パン・ズーム・ピンチ）
+├─ export/
+│  ├─ format.ts       num / allPolys
+│  ├─ dxf.ts          makeDXF(polys?, H?)
+│  └─ svg.ts          makeSVG(polys?, W?, H?)
+├─ ui/
+│  ├─ controls.ts     ctlHTML / bindCtl / build*Ctls / buildPatternCards / setThickness / 逆算ソルバー
+│  ├─ stats.ts        renderStats / updateMinR
+│  ├─ warnings.ts     renderWarnings
+│  ├─ testsheet.ts    buildTestSheet / downloadTestSheet（§7.5）
+│  ├─ hash.ts         scheduleHash / loadHash（契約 §1-4）
+│  └─ toast.ts        toast
+└─ style.css          デザイントークン(:root CSS変数)、レイアウト/パネル/ステージ/モバイル
 
 tools/
 ├─ golden.mjs         出力ゴールデンの採取/照合(§6.0)
@@ -70,7 +91,16 @@ tools/
 tests/
 ├─ README.md          ゴールデンの使い方と採取マトリクス
 └─ golden/            86ケース × DXF/SVG = 172ファイル + manifest.json
+
+.github/workflows/ci.yml   push/PR で build → golden → smoke
 ```
+
+**依存の向きは一方向**にしてある: `ui/* → app.ts → render2d/stats/warnings/hash`。
+`app.ts` は UI 側を import しない。これを崩すと循環依存になるので注意。
+
+`window.__app`(`src/main.ts`)は **検証ツール専用の露出**で、アプリ動作には使わない。
+ESM 化でトップレベルの `const` がグローバルでなくなったため、`tools/*.mjs` から内部を
+触るために置いてある。可変な `cuts` / `view` などは getter で露出している(値コピーだと古くなるため)。
 
 ポリラインは `[[x,y],...]` のmm座標。原点は左上、y下向き。`cuts`(生成結果)と `framePoly`(外枠)が描画・出力の唯一のソース。
 
@@ -128,10 +158,12 @@ DXFはR13(AC1012)・SPLINE主体。**スプラインは短い断片の連鎖な�
   margin=2で全プリセット連結成分1を確認済み)。パラメータ ts/td/gap。
 
 ### 3.4 パターン追加の手順
-1. `GEN` に生成器を追加(mm座標ポリライン配列を返す。最後に `clipRect`)。
-2. `PARAM_DEFS` にパラメータ定義、`state.p` にデフォルト、`PATTERNS` に登録。
+1. `src/geometry/patterns.ts` の `GEN` に生成器を追加(mm座標ポリライン配列を返す。最後に `clipRect`)。
+   併せて `src/types.ts` の `PatternId` / `ParamKey` に追記する(型で漏れを検出できる)。
+2. `src/state.ts` の `PARAM_DEFS` にパラメータ定義と `state.p` のデフォルト、`PATTERNS` に登録。
 3. `PRESETS` 3種に**そのパターンの全パラメータキー**を追加(§7の既知欠陥を増やさないこと)。
-4. `renderStats` の `charLen`(柔軟性ヒューリスティック)と `renderWarnings` に分岐を追加。
+4. `src/material.ts` の `flexScoreOf` の `charLen`(柔軟性ヒューリスティック)と
+   `src/ui/warnings.ts` に分岐を追加。
 5. サムネイルは同じ生成器で自動描画される(`thumbSVG` のパラメータセットに追記)。
 6. §6の検証バッテリーを通し、**ゴールデンを採り直す**(`node tools/golden.mjs capture`)。
    採取マトリクスは全パターンを走査するので、新パターンは自動的に対象に入る。
@@ -184,10 +216,11 @@ node tools/golden.mjs check     # 出力が変わっていないか検証（差�
 node tools/golden.mjs capture   # 出力を意図的に変えたときだけ採り直す
 ```
 
-実ブラウザ(Chromium)で `index.html` を読み込み、アプリ本体の
+実ブラウザ(Chromium)で **ビルド成果物 `dist/index.html`** を読み込み、アプリ本体の
 `regenerate()` → `makeDXF()` / `makeSVG()` / `buildTestSheet()` を**そのまま呼んで**
 出力を `tests/golden/` に保存してある。ユーザーがダウンロードボタンを押すのと同一経路なので、
-抽出用の再実装がズレる心配がない。
+抽出用の再実装がズレる心配がない。**検証対象がソースではなくビルド成果物である**点が重要で、
+「ビルドを通すと壊れる」類の事故もここで捕まる。`HINGE_TARGET` 環境変数で対象を差し替えられる。
 
 採取マトリクス(86ケース × DXF/SVG = 172ファイル)—— 詳細は `tests/README.md`:
 
@@ -238,6 +271,10 @@ node tools/golden.mjs capture   # 出力を意図的に変えたときだけ採�
   一度 `about:blank` に離脱してから遷移すること。
 - `claude/launch.json` は**ドットが無いためClaude Codeに読まれていない**(`.claude/` が正しい)。
   現在は各ツールが自前でサーバを立てるので実害はない。
+- **検証は必ず `npm run build` の後に行う**(`npm test` は `pretest` で自動的にビルドする)。
+  `dist/` はコミットしていないので、ビルドを忘れると古い成果物か「存在しない」で落ちる。
+- ESM 化でトップレベルの `const` はグローバルではなくなった。ページ内から内部を触るには
+  `window.__app` を使う(§2)。可変値は getter 経由で読むこと。
 
 ### 6.4 ブラウザE2E ★v8で実装
 
@@ -367,11 +404,14 @@ DXF/SVGダウンロードの実ファイル検証は §6.0 のゴールデンが
 方針転換(冒頭)を受け、優先度順に整理し直したもの。
 
 ### P0 — 仕様の安定(基盤)
-1. **Vite + TypeScript 化とモジュール分割**: `geometry/`(GEN+clip) `export/` `render2d/` `state/` `ui/`。
-   併せて **GENの純関数化**(現在 `GEN.*(s,...)` は state 全体を受け取り、`flexScoreOf` は
-   `state.W*state.H` をグローバル参照している)。`gen(pattern, params, rect) → Polyline[]` にすれば
-   Nodeから素で叩ける。
-2. **tests/ の整備 + GitHub Actions**: vitest(§6.1/§6.2)。§6.0/§6.4 は実装済みなのでCIに載せるだけ。
+1. ~~Vite + TypeScript 化とモジュール分割~~ → **v8で実装済み**(§2)。
+   出力は86ケースすべてバイト一致を確認済み。
+   **積み残し: GENの純関数化。** `GEN.*(s,...)` は依然 state 全体(`AppState`)を受け取り、
+   `flexScoreOf` は `state.W*state.H` をモジュール越しに参照している。
+   `gen(pattern, params, rect) → Polyline[]` にすれば Node から素で叩けて §6.1/§6.2 が書きやすくなる。
+   ただし**出力が変わらないことをゴールデンで担保しながら**やること。
+2. **vitest の導入**(§6.1/§6.2)。§6.0/§6.4 と CI は v8で実装済みなので、
+   純粋な幾何テストを足すだけ。P0-1の積み残し(GENの純関数化)が前提。
 3. ~~ゴールデン回帰テスト~~ → **v8で実装済み(§6.0)**
 4. **状態スキーマのバージョン化**: `{v:2,...}` + `migrate()` を1箇所に集約。v無し=v1として扱えば
    §1-4の後方互換は守れる。併せて JSONプロジェクト保存/読込、hashの短縮/圧縮、
@@ -425,9 +465,16 @@ DXF/SVGダウンロードの実ファイル検証は §6.0 のゴールデンが
   1. **出力ゴールデン照合を実装**(§6.0)。86ケース172ファイルを `tests/golden/` に保存。
   2. **3D曲げプレビューを削除**(§4)。シミュレーションとして意味を成さないため。
      298行削除(74,922 → 64,022 bytes)。出力は86ケース全てバイト一致を確認。
-  3. **UIスモークテストを実装**(§6.4、19項目)。実ポインタ操作で§5の罠を検証。
+  3. **UIスモークテストを実装**(§6.4)。実ポインタ操作で§5の罠を検証。
   4. 本ドキュメントを実態に合わせて全面改訂(ファイル名 `index.html`、リンク切れの§番号、
      未整備のテストを「未実装」と正直に記載、既知欠陥を§7.2に列挙)。
+  5. **CI(GitHub Actions)を追加**(§8 P0-2)。push/PR で build → ゴールデン照合 → スモークテスト。
+     併せて検証ツールから環境依存の絶対パスを排除した。
+  6. **P2-10 / P2-11 を修正**(§7.2.1)。PRESETSのキー欠落を補完し、廃止済み `web` を削除。
+     スモークテストを19→22項目に拡張して再発を防止。
+  7. **Vite + TypeScript 化**(§2、§8 P0-1)。1ファイル1,381行を17モジュールへ分割し、
+     `vite-plugin-singlefile` で配布物の単一HTMLを維持(48KB / gzip 17KB)。
+     **移行前後で86ケースすべてバイト一致**。積み残しはGENの純関数化(§8 P0-1)。
 
 出典クレジット(アプリ内ヒント欄にも記載済み):
 パターン考案 = Dujam Ivanišević (koFAKTORlab, 2014) / 形式化 = Zarrinmehr, Akleman, Ettehad, Kalantar, Borhani (CAADFutures 2017, "[4,2] meander pattern")

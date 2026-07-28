@@ -729,28 +729,31 @@ const GEN = {
   },
 
   tri(s,x0,y0,x1,y1){
-    // fequalsf.com "parametric kerf" #9 (reference DXF): triangular grid; each
-    // cell holds concentric inset triangle rings (spacing td). Even rings break
-    // at the CORNERS, odd rings at the EDGE MIDPOINTS, so bridges alternate and
-    // the material winds between rings. Cell edges themselves are never cut —
-    // a solid web runs along the whole grid, so nothing drops out.
+    // fequalsf.com "parametric kerf" #9 (reference DXF): triangular grid of edge
+    // ts; the grid edges themselves are cut, and each cell holds concentric
+    // inset triangle rings (spacing td).
+    //
+    // 参照シートの見た目を決めているのは「線が長く連続していること」:
+    //  - 格子辺は1本の直線として切り、両端を gap/2 だけ縮める。ブリッジは
+    //    格子の頂点に集まり、全幅に渡る水平線と長い斜線ができる。
+    //  - 内側の各リングは 1本の開ポリラインで、切れ目は角1箇所だけ。
+    //    切れ目の角をリングごとに回す(k-1)%3 ので、リング間の材料は渦状に
+    //    繋がり、どの環も脱落しない(格子頂点のブリッジ経由で外側へ繋がる)。
     const S=s.p.ts, d=s.p.td, g=s.p.gap, out=[];
     const rowH=S*Math.sqrt(3)/2, apo=S/(2*Math.sqrt(3));
-    const cell=(P0,P1,P2)=>{
+    const et=Math.min(0.4,(g/2)/S);
+    const edge=(A,B)=>{ out.push([lerpPt(A,B,et), lerpPt(B,A,et)]); };
+    const rings=(P0,P1,P2)=>{
+      const V=[P0,P1,P2];
       const O=[(P0[0]+P1[0]+P2[0])/3,(P0[1]+P1[1]+P2[1])/3];
-      for(let k=0;k<40;k++){
-        const f=1-d*(k+1)/apo;
+      for(let k=1;k<60;k++){
+        const f=1-d*k/apo;
         const E=f*S;
-        if(E<Math.max(g*1.6+0.4, 2.2*d))break;
-        const Q=[P0,P1,P2].map(P=>[O[0]+f*(P[0]-O[0]), O[1]+f*(P[1]-O[1])]);
+        if(f<=0||E<Math.max(g*1.4+0.6, 2*d))break;
+        const Q=V.map(P=>[O[0]+f*(P[0]-O[0]), O[1]+f*(P[1]-O[1])]);
         const t=Math.min(0.45,(g/2)/E);
-        for(let i=0;i<3;i++){
-          if(k%2===0){                                  // corner gaps -> edge pieces
-            out.push([lerpPt(Q[i],Q[(i+1)%3],t), lerpPt(Q[i],Q[(i+1)%3],1-t)]);
-          }else{                                        // mid-edge gaps -> corner chevrons
-            out.push([lerpPt(Q[(i+2)%3],Q[i],0.5+t), Q[i], lerpPt(Q[i],Q[(i+1)%3],0.5-t)]);
-          }
-        }
+        const b=(k-1)%3, i1=(b+1)%3, i2=(b+2)%3;        // 角 b に切れ目
+        out.push([lerpPt(Q[b],Q[i1],t), Q[i1], Q[i2], lerpPt(Q[i2],Q[b],1-t)]);
       }
     };
     const rows=Math.ceil((y1-y0)/rowH)+2;
@@ -760,8 +763,11 @@ const GEN = {
       const cols=Math.ceil((x1-x0)/S)+2;
       for(let c=-2;c<cols;c++){
         const bx=x0+c*S+xs;
-        cell([bx,yb],[bx+S,yb],[bx+S/2,yt]);            // up
-        cell([bx+S/2,yt],[bx+1.5*S,yt],[bx+S,yb]);      // down
+        const BL=[bx,yb], BR=[bx+S,yb], T=[bx+S/2,yt];
+        // 格子辺は上向き三角形からだけ出す(全ての辺がちょうど1回ずつ出る)
+        edge(BL,BR); edge(BL,T); edge(BR,T);
+        rings(BL,BR,T);                                 // up
+        rings(T,[bx+1.5*S,yt],BR);                      // down
       }
     }
     return clipRect(out,x0,y0,x1,y1);
